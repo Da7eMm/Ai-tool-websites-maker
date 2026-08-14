@@ -79,7 +79,7 @@
             <!-- Quick Study Tip Card -->
             <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-4 rounded-xl border border-slate-700/80 text-xs text-slate-300 space-y-1">
                 <p class="font-bold text-cyan-400 flex items-center gap-1">💡 Language Pro-Tip</p>
-                <p>Click the speaker icon next to any term to hear authentic US pronunciation and repeat aloud to master medical nomenclature.</p>
+                <p>Click the speaker icon next to any term to hear authentic US pronunciation and repeat aloud.</p>
             </div>
         </aside>
 
@@ -132,7 +132,7 @@
                             <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">C1 Level</span>
                         </div>
                         <p id="descEn" class="text-slate-200 leading-relaxed text-xs lg:text-sm">
-                            The frontal lobe is located at the front of the brain and is associated with reasoning, motor control, emotion, and language (Broca's area). It is crucial for high-level executive functions and decision-making processes.
+                            The frontal lobe is located at the front of the brain and is associated with reasoning, motor control, emotion, and language (Broca's area).
                         </p>
                     </div>
 
@@ -143,7 +143,7 @@
                             <span class="text-[10px] bg-cyan-950 text-cyan-300 border border-cyan-800 px-2 py-0.5 rounded">مترجم</span>
                         </div>
                         <p id="descAr" class="text-cyan-100 leading-relaxed text-xs lg:text-sm">
-                            الفص الجبهي يقع في مقدمة الدماغ ويرتبط بالتفكير المنطقي، والتحكم الحركي، والمشاعر، واللغة. وهو أساسي للوظائف الإدراكية العليا وعمليات اتخاذ القرار.
+                            الفص الجبهي يقع في مقدمة الدماغ ويرتبط بالتفكير المنطقي، والتحكم الحركي، والمشاعر، واللغة.
                         </p>
                     </div>
 
@@ -155,10 +155,6 @@
                                 <span class="font-semibold text-cyan-300">Reasoning</span>
                                 <span class="text-slate-400">التفكير المنطقي</span>
                             </li>
-                            <li class="flex justify-between items-center bg-slate-900 p-1.5 rounded border border-slate-800">
-                                <span class="font-semibold text-cyan-300">Motor Control</span>
-                                <span class="text-slate-400">التحكم الحركي</span>
-                            </li>
                         </ul>
                     </div>
                 </div>
@@ -166,15 +162,14 @@
 
             <!-- Footer Badge inside panel -->
             <div class="pt-4 border-t border-slate-800 text-center text-xs text-slate-500">
-                <span>Interactive Learning Engine v3.4</span>
+                <span>Interactive Learning Engine v3.5</span>
             </div>
         </aside>
 
     </main>
 
-    <!-- Comprehensive JavaScript Application Logic -->
+    <!-- JavaScript Application Logic with Real 3D Heart Geometry -->
     <script>
-        // Database containing anatomical systems, 3D color themes, English explanations, Arabic translations, and targeted medical vocabulary.
         const anatomicalDatabase = {
             brain: {
                 name: "Central Nervous System (Brain)",
@@ -184,52 +179,36 @@
                         title: "Frontal Lobe",
                         latin: "Lobus frontalis",
                         color: 0x38bdf8,
-                        descEn: "The frontal lobe is located at the front of the brain and is associated with reasoning, motor control, emotion, and language (Broca's area). It is crucial for high-level executive functions and decision-making processes.",
-                        descAr: "الفص الجبهي يقع في مقدمة الدماغ ويرتبط بالتفكير المنطقي، والتحكم الحركي، والمشاعر، واللغة. وهو أساسي للوظائف الإدراكية العليا وعمليات اتخاذ القرار.",
-                        vocab: [
-                            { en: "Reasoning", ar: "التفكير المنطقي" },
-                            { en: "Motor Control", ar: "التحكم الحركي" },
-                            { en: "Executive Functions", ar: "الوظائف التنفيذية" }
-                        ]
+                        descEn: "The frontal lobe is located at the front of the brain and is associated with reasoning, motor control, emotion, and language (Broca's area).",
+                        descAr: "الفص الجبهي يقع في مقدمة الدماغ ويرتبط بالتفكير المنطقي، والتحكم الحركي، والمشاعر، واللغة.",
+                        vocab: [{ en: "Reasoning", ar: "التفكير المنطقي" }, { en: "Motor Control", ar: "التحكم الحركي" }]
                     },
                     parietal: {
                         category: "Cortex / Sensory Area",
                         title: "Parietal Lobe",
                         latin: "Lobus parietalis",
                         color: 0x818cf8,
-                        descEn: "The parietal lobe processes sensory information regarding taste, temperature, and touch. It contains the somatosensory cortex which handles bodily sensations and spatial orientation.",
-                        descAr: "الفص الجداري يعالج المعلومات الحسية المتعلقة بالتذوق، ودرجة الحرارة، واللمس، ويحتوي على القشرة الحسية الجسدية المسؤولة عن الإحساس والتوجه المكاني.",
-                        vocab: [
-                            { en: "Sensory Information", ar: "معلومات حسية" },
-                            { en: "Temperature", ar: "درجة الحرارة" },
-                            { en: "Spatial Orientation", ar: "التوجه المكاني" }
-                        ]
+                        descEn: "The parietal lobe processes sensory information regarding taste, temperature, and touch.",
+                        descAr: "الفص الجداري يعالج المعلومات الحسية المتعلقة بالتذوق، ودرجة الحرارة، واللمس.",
+                        vocab: [{ en: "Sensory Information", ar: "معلومات حسية" }, { en: "Temperature", ar: "درجة الحرارة" }]
                     },
                     temporal: {
                         category: "Cortex / Auditory Center",
                         title: "Temporal Lobe",
                         latin: "Lobus temporalis",
                         color: 0xc084fc,
-                        descEn: "Located near the temples, this lobe is responsible for processing auditory information, memory integration, and speech comprehension via Wernicke's area.",
-                        descAr: "يقع قرب الصدغين، وهو مسؤول عن معالجة المعلومات السمعية، دمج الذاكرة، وفهم الكلام عبر منطقة فيرنيك.",
-                        vocab: [
-                            { en: "Auditory Information", ar: "معلومات سمعية" },
-                            { en: "Memory Integration", ar: "دمج الذاكرة" },
-                            { en: "Speech Comprehension", ar: "فهم الكلام" }
-                        ]
+                        descEn: "Located near the temples, this lobe is responsible for processing auditory information and memory integration.",
+                        descAr: "يقع قرب الصدغين، وهو مسؤول عن معالجة المعلومات السمعية ودمج الذاكرة.",
+                        vocab: [{ en: "Auditory Information", ar: "معلومات سمعية" }, { en: "Memory", ar: "الذاكرة" }]
                     },
                     cerebellum: {
                         category: "Hindbrain / Coordination",
                         title: "Cerebellum",
                         latin: "Cerebellum",
                         color: 0xf472b6,
-                        descEn: "Often referred to as the 'little brain', the cerebellum regulates and coordinates voluntary muscle movements, posture, and core balance based on sensory inputs.",
-                        descAr: "يُعرف غالباً بـ 'الدماغ الصغير'، وينظم ويسق الحركات العضلية الإرادية، وضعية الجسم، والتوازن العام بناءً على المدخلات الحسية.",
-                        vocab: [
-                            { en: "Voluntary Movements", ar: "حركات إرادية" },
-                            { en: "Posture", ar: "وضعية الجسم" },
-                            { en: "Balance", ar: "التوازن" }
-                        ]
+                        descEn: "The cerebellum regulates and coordinates voluntary muscle movements, posture, and core balance.",
+                        descAr: "ينظم ويقسّق الحركات العضلية الإرادية، وضعية الجسم، والتوازن العام.",
+                        vocab: [{ en: "Movements", ar: "الحركات" }, { en: "Balance", ar: "التوازن" }]
                     }
                 }
             },
@@ -241,52 +220,36 @@
                         title: "Right Atrium",
                         latin: "Atrium dextrum",
                         color: 0xef4444,
-                        descEn: "The right atrium receives deoxygenated blood from the body through the superior and inferior vena cava and pumps it into the right ventricle.",
-                        descAr: "الأذين الأيمن يستقبل الدم غير المحمل بالأكسجين من الجسم عبر الوريد الاجوف العلوي والسفل ويضخه إلى البطين الأيمن.",
-                        vocab: [
-                            { en: "Deoxygenated Blood", ar: "دم غير محمل بالأكسجين" },
-                            { en: "Vena Cava", ar: "الوريد الأجوف" },
-                            { en: "Ventricle", ar: "البطين" }
-                        ]
+                        descEn: "The right atrium receives deoxygenated blood from the body and pumps it into the right ventricle.",
+                        descAr: "الأذين الأيمن يستقبل الدم غير المحمل بالأكسجين من الجسم ويضخه إلى البطين الأيمن.",
+                        vocab: [{ en: "Deoxygenated Blood", ar: "دم غير محمل بالأكسجين" }, { en: "Ventricle", ar: "البطين" }]
                     },
                     leftAtrium: {
                         category: "Cardiovascular / Chambers",
                         title: "Left Atrium",
                         latin: "Atrium sinistrum",
                         color: 0xf87171,
-                        descEn: "The left atrium receives oxygenated blood from the lungs via the pulmonary veins and passes it down into the left ventricle for systemic circulation.",
-                        descAr: "الأذين الأيسر يستقبل الدم المحمل بالأكسجين من الرئتين عبر الأوردة الرئوية ويوجهه إلى البطين الأيسر للدورة الدموية الجهازية.",
-                        vocab: [
-                            { en: "Oxygenated Blood", ar: "دم محمل بالأكسجين" },
-                            { en: "Pulmonary Veins", ar: "الأوردة الرئوية" },
-                            { en: "Systemic Circulation", ar: "الدورة الدموية الجهازية" }
-                        ]
+                        descEn: "The left atrium receives oxygenated blood from the lungs via the pulmonary veins.",
+                        descAr: "الأذين الأيسر يستقبل الدم المحمل بالأكسجين من الرئتين عبر الأوردة الرئوية.",
+                        vocab: [{ en: "Oxygenated Blood", ar: "دم محمل بالأكسجين" }, { en: "Pulmonary Veins", ar: "الأوردة الرئوية" }]
                     },
                     aorta: {
                         category: "Cardiovascular / Arteries",
                         title: "Aorta",
                         latin: "Aorta",
                         color: 0xdc2626,
-                        descEn: "The aorta is the main systemic artery of the body, originating from the left ventricle and distributing oxygen-rich blood to all parts of the systemic circulation.",
-                        descAr: "الشريان الأورطي (الأبهر) هو الشريان الرئيسي للجسم، ينشأ من البطين الأيسر ويوزع الدم الغني بالأكسجين إلى جميع أجزاء الجسم.",
-                        vocab: [
-                            { en: "Systemic Artery", ar: "شريان جهازي" },
-                            { en: "Oxygen-rich Blood", ar: "دم غني بالأكسجين" },
-                            { en: "Distribution", ar: "توزيع" }
-                        ]
+                        descEn: "The aorta is the main systemic artery, distributing oxygen-rich blood to the entire body.",
+                        descAr: "الشريان الأورطي هو الشريان الرئيسي، يوزع الدم الغني بالأكسجين إلى جميع أنحاء الجسم.",
+                        vocab: [{ en: "Systemic Artery", ar: "شريان جهازي" }, { en: "Distribution", ar: "توزيع" }]
                     },
                     myocardium: {
                         category: "Cardiovascular / Muscle Tissue",
                         title: "Myocardium",
                         latin: "Myocardium",
                         color: 0x991b1b,
-                        descEn: "The myocardium is the thick, middle muscular layer of the heart wall containing cardiac muscle fibers that contract rhythmically to pump blood.",
-                        descAr: "عضلة القلب (الميوقارديم) هي الطبقة العضلية الوسطى والسميكة لجدار القلب وتحتوي على ألياف عضلية تنقبض بشكل إيقاعي لضخ الدم.",
-                        vocab: [
-                            { en: "Muscle Layer", ar: "طبقة عضلية" },
-                            { en: "Cardiac Muscle", ar: "عضلة قلبية" },
-                            { en: "Contract Rhythmically", ar: "تنقبض إيقاعياً" }
-                        ]
+                        descEn: "The myocardium is the thick muscular layer of the heart wall that contracts rhythmically to pump blood.",
+                        descAr: "عضلة القلب هي الطبقة العضلية السميكة لجدار القلب التي تنقبض إيقاعياً لضخ الدم.",
+                        vocab: [{ en: "Muscle Layer", ar: "طبقة عضلية" }, { en: "Contract", ar: "ينقبض" }]
                     }
                 }
             },
@@ -298,52 +261,36 @@
                         title: "Skull (Cranium)",
                         latin: "Cranium",
                         color: 0xf8fafc,
-                        descEn: "The cranium is the bony structure that encases and protects the brain, sensory organs, and supports the structures of the face.",
-                        descAr: "جمجمة الرأس (الكرانيوم) هي البنية العظمية التي تحيط بالدماغ وتحميه، بالإضافة إلى حماية الأعضاء الحسية ودعم بنية الوجه.",
-                        vocab: [
-                            { en: "Bony Structure", ar: "بنية عظمية" },
-                            { en: "Encases and Protects", ar: "يحيط ويحمي" },
-                            { en: "Sensory Organs", ar: "أعضاء حسية" }
-                        ]
+                        descEn: "The cranium is the bony structure that encases and protects the brain.",
+                        descAr: "جمجمة الرأس هي البنية العظمية التي تحيط بالدماغ وتحميه.",
+                        vocab: [{ en: "Cranium", ar: "الجمجمة" }, { en: "Protect", ar: "يحمي" }]
                     },
                     spine: {
                         category: "Axial Skeleton / Vertebral Column",
                         title: "Vertebral Column (Spine)",
                         latin: "Columna vertebralis",
                         color: 0xe2e8f0,
-                        descEn: "The spine consists of interconnected vertebrae that protect the spinal cord, support upright posture, and allow flexible torso mobility.",
-                        descAr: "العمود الفقري يتكون من فقرات مترابطة تحمي الحبل الشوكي، تدعم الوضعية المنتصبة، وتسمح بحركة الجذع بمرونة.",
-                        vocab: [
-                            { en: "Interconnected Vertebrae", ar: "فقرات مترابطة" },
-                            { en: "Spinal Cord", ar: "الحبل الشوكي" },
-                            { en: "Upright Posture", ar: "وضعية منتصبة" }
-                        ]
+                        descEn: "The spine consists of interconnected vertebrae that protect the spinal cord and support posture.",
+                        descAr: "العمود الفقري يتكون من فقرات مترابطة تحمي الحبل الشوكي وتدعم الوضعية.",
+                        vocab: [{ en: "Vertebrae", ar: "فقرات" }, { en: "Spinal Cord", ar: "الحبل الشوكي" }]
                     },
                     ribcage: {
                         category: "Axial Skeleton / Thorax",
                         title: "Rib Cage",
                         latin: "Cavea thoracica",
                         color: 0xccbdc0,
-                        descEn: "The rib cage protects vital thoracic organs including the heart and lungs, while expanding and contracting during respiratory mechanics.",
-                        descAr: "قفص الصدر يحمي الأعضاء الحيوية الصدرية بما فيها القلب والرئتين، بينما يتمدد وينكمش أثناء ميكانيكية التنفس.",
-                        vocab: [
-                            { en: "Thoracic Organs", ar: "أعضاء صدرية" },
-                            { en: "Respiratory Mechanics", ar: "ميكانيكية التنفس" },
-                            { en: "Expanding and Contracting", ar: "تمدد وانكماش" }
-                        ]
+                        descEn: "The rib cage protects vital thoracic organs including the heart and lungs.",
+                        descAr: "قفص الصدر يحمي الأعضاء الحيوية الصدرية بما فيها القلب والرئتين.",
+                        vocab: [{ en: "Rib Cage", ar: "قفص الصدر" }, { en: "Thoracic Organs", ar: "أعضاء صدرية" }]
                     },
                     femur: {
                         category: "Appendicular Skeleton / Lower Limb",
                         title: "Femur (Thigh Bone)",
                         latin: "Femur",
                         color: 0xf1f5f9,
-                        descEn: "The femur is the longest, heaviest, and strongest bone in the human body, transmitting forces from the hip to the lower leg during locomotion.",
-                        descAr: "عظمة الفخذ هي أطول وأثقل وأقوى عظمة في جسم الإنسان، وتنقل القوى من الورك إلى الساق السفلى أثناء الحركة.",
-                        vocab: [
-                            { en: "Longest Bone", ar: "أطول عظمة" },
-                            { en: "Transmitting Forces", ar: "نقل القوى" },
-                            { en: "Locomotion", ar: "الحركة والانتقال" }
-                        ]
+                        descEn: "The femur is the longest, heaviest, and strongest bone in the human body.",
+                        descAr: "عظمة الفخذ هي أطول وأثقل وأقوى عظمة في جسم الإنسان.",
+                        vocab: [{ en: "Thigh Bone", ar: "عظمة الفخذ" }, { en: "Strongest Bone", ar: "أقوى عظمة" }]
                     }
                 }
             },
@@ -355,52 +302,36 @@
                         title: "Pectoralis Major",
                         latin: "Musculus pectoralis major",
                         color: 0xf97316,
-                        descEn: "A thick, fan-shaped muscle situated at the chest of the human body, making up the bulk of the chest muscles and facilitating arm flexion and rotation.",
-                        descAr: "عضلة صدرية كبيرة وهي عضلة سميكة على شكل مروحة تقع في صدر الإنسان، تشكل الجزء الأكبر من عضلات الصدر وتسهل ثني الذراع ودورانها.",
-                        vocab: [
-                            { en: "Fan-shaped Muscle", ar: "عضلة على شكل مروحة" },
-                            { en: "Bulk of Chest", ar: "كتلة الصدر" },
-                            { en: "Arm Flexion", ar: "ثني الذراع" }
-                        ]
+                        descEn: "A thick, fan-shaped muscle situated at the chest facilitating arm flexion and rotation.",
+                        descAr: "عضلة صدرية كبيرة تقع في الصدر وتسهل ثني الذراع ودورانها.",
+                        vocab: [{ en: "Chest Muscles", ar: "عضلات الصدر" }, { en: "Flexion", ar: "ثني" }]
                     },
                     biceps: {
                         category: "Upper Limbs / Arms",
                         title: "Biceps Brachii",
                         latin: "Biceps brachii",
                         color: 0xea580c,
-                        descEn: "A two-headed muscle located on the upper arm between the shoulder and the elbow, primarily responsible for forearm supination and elbow flexion.",
-                        descAr: "عضلة ذات رأسين (البايسبس) تقع في الجزء العلوي من الذراع بين الكتف والمرفق، ومؤهلة أساساً لثني المرفق وتدوير الساعد.",
-                        vocab: [
-                            { en: "Two-headed Muscle", ar: "عضلة ذات رأسين" },
-                            { en: "Forearm Supination", ar: "بسط/تدوير الساعد" },
-                            { en: "Elbow Flexion", ar: "ثني المرفق" }
-                        ]
+                        descEn: "A two-headed muscle located on the upper arm responsible for elbow flexion.",
+                        descAr: "عضلة ذات رأسين تقع في الجزء العلوي من الذراع ومؤهلة لثني المرفق.",
+                        vocab: [{ en: "Upper Arm", ar: "الذراع العلوي" }, { en: "Elbow", ar: "المرفق" }]
                     },
                     abdominals: {
                         category: "Core / Abdominal Wall",
                         title: "Rectus Abdominis",
                         latin: "Musculus rectus abdominis",
                         color: 0xc2410c,
-                        descEn: "A paired muscle running vertically on each side of the anterior wall of the human abdomen, commonly known as the 'abs', aiding in core stabilization and lumbar flexion.",
-                        descAr: "عضلة البطن المستقيمة (الكور) وهي زوج من العضلات يمتد عمودياً على جدار البطن الأمامي، وتساعد في تثبيت الجذع وثني أسفل الظهر.",
-                        vocab: [
-                            { en: "Anterior Wall", ar: "الجدار الأمامي" },
-                            { en: "Core Stabilization", ar: "تثبيت الجذع" },
-                            { en: "Lumbar Flexion", ar: "ثني أسفل الظهر" }
-                        ]
+                        descEn: "A paired muscle running vertically on the abdomen, aiding in core stabilization.",
+                        descAr: "عضلة البطن المستقيمة التي تمتد عمودياً وتساعد في تثبيت الجذع.",
+                        vocab: [{ en: "Abdomen", ar: "البطن" }, { en: "Core", ar: "الجذع/الوسط" }]
                     },
                     quadriceps: {
                         category: "Lower Limbs / Thigh",
                         title: "Quadriceps Femoris",
                         latin: "Quadriceps femoris",
                         color: 0x9a3412,
-                        descEn: "A large muscle group located at the front of the thigh, acting as a powerful knee extensor and essential for walking, running, and jumping.",
-                        descAr: "مجموعة عضلية كبيرة تقع في مقدمة الفخذ، تعمل كممدد قوي للركبة وأساسية للمشي، الجري، والقفز.",
-                        vocab: [
-                            { en: "Muscle Group", ar: "مجموعة عضلية" },
-                            { en: "Knee Extensor", ar: "ممدد الركبة" },
-                            { en: "Jumping", ar: "القفز" }
-                        ]
+                        descEn: "A large muscle group located at the front of the thigh acting as a knee extensor.",
+                        descAr: "مجموعة عضلية كبيرة تقع في مقدمة الفخذ تعمل كممدد للركبة.",
+                        vocab: [{ en: "Thigh", ar: "الفخذ" }, { en: "Extensor", ar: "ممدد" }]
                     }
                 }
             }
@@ -409,7 +340,6 @@
         let currentSystemKey = 'brain';
         let currentPartKey = 'frontal';
 
-        // Three.js Engine Setup
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
@@ -419,7 +349,6 @@
         renderer.setPixelRatio(window.devicePixelRatio);
         container.appendChild(renderer.domElement);
 
-        // Lighting setup
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
         scene.add(ambientLight);
 
@@ -427,19 +356,10 @@
         pointLight.position.set(15, 15, 15);
         scene.add(pointLight);
 
-        const pointLight2 = new THREE.PointLight(0x38bdf8, 1.2);
-        pointLight2.position.set(-15, -15, -15);
-        scene.add(pointLight2);
-
-        // Group to hold dynamic 3D geometry
         const modelGroup = new THREE.Group();
         scene.add(modelGroup);
 
-        let mainMesh;
-        let secondaryMeshNode1, secondaryMeshNode2;
-
         function build3DModel(systemKey, partKey) {
-            // Clear previous children
             while(modelGroup.children.length > 0){ 
                 modelGroup.remove(modelGroup.children[0]); 
             }
@@ -447,79 +367,69 @@
             const partData = anatomicalDatabase[systemKey].parts[partKey];
             const colorVal = partData ? partData.color : 0x38bdf8;
 
-            // Generate customized organic geometry based on system
             if (systemKey === 'brain') {
-                const geo = new THREE.SphereGeometry(1.7, 32, 32);
+                const geo = new THREE.SphereGeometry(1.6, 32, 32);
                 const mat = new THREE.MeshStandardMaterial({ color: colorVal, roughness: 0.3, metalness: 0.2 });
-                mainMesh = new THREE.Mesh(geo, mat);
+                const mainMesh = new THREE.Mesh(geo, mat);
                 modelGroup.add(mainMesh);
 
-                // Additional lobes/nodules for realistic 3D complexity
                 const subGeo = new THREE.SphereGeometry(0.5, 16, 16);
                 const subMat = new THREE.MeshStandardMaterial({ color: 0xf472b6, roughness: 0.4 });
-                secondaryMeshNode1 = new THREE.Mesh(subGeo, subMat);
-                secondaryMeshNode1.position.set(0.9, 0.6, 0.7);
-                modelGroup.add(secondaryMeshNode1);
-
-                secondaryMeshNode2 = new THREE.Mesh(subGeo, subMat);
-                secondaryMeshNode2.position.set(-0.9, -0.3, 0.4);
-                modelGroup.add(secondaryMeshNode2);
+                const node1 = new THREE.Mesh(subGeo, subMat);
+                node1.position.set(0.9, 0.6, 0.7);
+                modelGroup.add(node1);
             } 
             else if (systemKey === 'heart') {
-                // Heart-like organic shape using cylinders and spheres combined
-                const heartGeo = new THREE.ConeGeometry(1.2, 2.5, 32);
-                const mat = new THREE.MeshStandardMaterial({ color: colorVal, roughness: 0.2, metalness: 0.4 });
-                mainMesh = new THREE.Mesh(heartGeo, mat);
-                mainMesh.rotation.z = Math.PI / 6;
-                modelGroup.add(mainMesh);
+                // Real 3D Heart Shape using Three.js Shape and ExtrudeGeometry
+                const x = 0, y = 0;
+                const heartShape = new THREE.Shape();
+                heartShape.moveTo( x + 5, y + 5 );
+                heartShape.bezierCurveTo( x + 5, y + 5, x + 4, y, x, y );
+                heartShape.bezierCurveTo( x - 6, y, x - 6, y + 7, x - 6, y + 7 );
+                heartShape.bezierCurveTo( x - 6, y + 11, x - 3, y + 15.4, x + 5, y + 19 );
+                heartShape.bezierCurveTo( x + 12, y + 15.4, x + 16, y + 11, x + 16, y + 7 );
+                heartShape.bezierCurveTo( x + 16, y + 7, x + 16, y, x + 10, y );
+                heartShape.bezierCurveTo( x + 7, y, x + 5, y + 5, x + 5, y + 5 );
 
-                const topGeo = new THREE.SphereGeometry(0.8, 16, 16);
-                secondaryMeshNode1 = new THREE.Mesh(topGeo, mat);
-                secondaryMeshNode1.position.set(-0.4, 0.9, 0);
-                modelGroup.add(secondaryMeshNode1);
+                const extrudeSettings = {
+                    depth: 4,
+                    bevelEnabled: true,
+                    bevelSegments: 5,
+                    steps: 2,
+                    bevelSize: 2,
+                    bevelThickness: 2
+                };
 
-                secondaryMeshNode2 = new THREE.Mesh(topGeo, mat);
-                secondaryMeshNode2.position.set(0.5, 0.8, 0);
-                modelGroup.add(secondaryMeshNode2);
+                const heartGeo = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
+                heartGeo.center(); // Center the geometry
+                
+                const mat = new THREE.MeshStandardMaterial({ color: colorVal, roughness: 0.2, metalness: 0.3 });
+                const heartMesh = new THREE.Mesh(heartGeo, mat);
+                heartMesh.scale.set(0.12, 0.12, 0.12);
+                heartMesh.rotation.x = Math.PI; // Flip upright
+                modelGroup.add(heartMesh);
             }
             else if (systemKey === 'skeleton') {
-                // Skeletal structure representation (Cylinder stack + sphere)
                 const boneGeo = new THREE.CylinderGeometry(0.4, 0.5, 2.8, 16);
                 const mat = new THREE.MeshStandardMaterial({ color: colorVal, roughness: 0.6, metalness: 0.1 });
-                mainMesh = new THREE.Mesh(boneGeo, mat);
+                const mainMesh = new THREE.Mesh(boneGeo, mat);
                 modelGroup.add(mainMesh);
 
                 const jointGeo = new THREE.SphereGeometry(0.7, 16, 16);
-                secondaryMeshNode1 = new THREE.Mesh(jointGeo, mat);
-                secondaryMeshNode1.position.set(0, 1.5, 0);
-                modelGroup.add(secondaryMeshNode1);
-
-                secondaryMeshNode2 = new THREE.Mesh(jointGeo, mat);
-                secondaryMeshNode2.position.set(0, -1.5, 0);
-                modelGroup.add(secondaryMeshNode2);
+                const joint1 = new THREE.Mesh(jointGeo, mat);
+                joint1.position.set(0, 1.5, 0);
+                modelGroup.add(joint1);
             }
             else if (systemKey === 'muscular') {
-                // Muscular fibre representation (Torus/Capsule elements)
                 const muscleGeo = new THREE.CapsuleGeometry(0.9, 2.2, 16, 32);
                 const mat = new THREE.MeshStandardMaterial({ color: colorVal, roughness: 0.4, metalness: 0.1 });
-                mainMesh = new THREE.Mesh(muscleGeo, mat);
+                const mainMesh = new THREE.Mesh(muscleGeo, mat);
                 modelGroup.add(mainMesh);
-
-                const fiberGeo = new THREE.CylinderGeometry(0.2, 0.2, 2.6, 16);
-                const fiberMat = new THREE.MeshStandardMaterial({ color: 0xffedd5, roughness: 0.5 });
-                secondaryMeshNode1 = new THREE.Mesh(fiberGeo, fiberMat);
-                secondaryMeshNode1.position.set(0.7, 0, 0);
-                modelGroup.add(secondaryMeshNode1);
-
-                secondaryMeshNode2 = new THREE.Mesh(fiberGeo, fiberMat);
-                secondaryMeshNode2.position.set(-0.7, 0, 0);
-                modelGroup.add(secondaryMeshNode2);
             }
         }
 
         camera.position.z = 4.5;
 
-        // Mouse and Touch Interaction Controls for 3D Rotation
         let isDragging = false;
         let previousMousePosition = { x: 0, y: 0 };
         let autoRotate = true;
@@ -542,7 +452,6 @@
 
         window.addEventListener('mouseup', () => { isDragging = false; });
 
-        // Touch event support for tablets & iPads
         container.addEventListener('touchstart', (e) => {
             isDragging = true;
             previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
@@ -561,11 +470,9 @@
 
         window.addEventListener('touchend', () => { isDragging = false; });
 
-        // Switch Systems (Brain, Heart, Skeleton, Muscular)
         function switchSystem(systemKey) {
             currentSystemKey = systemKey;
             
-            // Update UI active buttons for systems
             document.querySelectorAll('.system-btn').forEach(btn => {
                 btn.classList.remove('bg-cyan-600', 'text-white', 'shadow-md');
                 btn.classList.add('bg-slate-800', 'text-slate-300', 'border', 'border-slate-700/50');
@@ -576,14 +483,11 @@
                 activeSysBtn.classList.add('bg-cyan-600', 'text-white', 'shadow-md');
             }
 
-            // Populate sub-parts list dynamically
             const subPartsContainer = document.getElementById('subPartsList');
             subPartsContainer.innerHTML = '';
             
             const systemData = anatomicalDatabase[systemKey];
             const partKeys = Object.keys(systemData.parts);
-            
-            // Select first part by default in new system
             currentPartKey = partKeys[0];
 
             partKeys.forEach((pkey, index) => {
@@ -596,17 +500,14 @@
                 subPartsContainer.appendChild(btn);
             });
 
-            // Update 3D model and text info panel
             build3DModel(currentSystemKey, currentPartKey);
             updateInfoPanel(currentSystemKey, currentPartKey);
         }
 
-        // Switch specific part inside active system
         function switchPart(systemKey, partKey) {
             currentSystemKey = systemKey;
             currentPartKey = partKey;
 
-            // Update sub-button active states
             const systemData = anatomicalDatabase[systemKey];
             Object.keys(systemData.parts).forEach(pkey => {
                 const sBtn = document.getElementById(`sub-btn-${pkey}`);
@@ -623,7 +524,6 @@
             updateInfoPanel(systemKey, partKey);
         }
 
-        // Update Text Info Panel and Vocabulary
         function updateInfoPanel(systemKey, partKey) {
             const data = anatomicalDatabase[systemKey].parts[partKey];
             if(!data) return;
@@ -634,7 +534,6 @@
             document.getElementById('descEn').innerText = data.descEn;
             document.getElementById('descAr').innerText = data.descAr;
 
-            // Update Vocabulary list
             const vocabListEl = document.getElementById('vocabList');
             vocabListEl.innerHTML = '';
             data.vocab.forEach(item => {
@@ -645,7 +544,6 @@
             });
         }
 
-        // Toggle Arabic translation box visibility
         let translationVisible = true;
         document.getElementById('langToggle').addEventListener('click', () => {
             translationVisible = !translationVisible;
@@ -653,13 +551,11 @@
             arBox.style.display = translationVisible ? 'block' : 'none';
         });
 
-        // Reset Camera view button
         document.getElementById('resetCameraBtn').addEventListener('click', () => {
             modelGroup.rotation.set(0, 0, 0);
             camera.position.set(0, 0, 4.5);
         });
 
-        // Toggle Auto-rotation
         function toggleAutoRotate() {
             autoRotate = !autoRotate;
             const btn = document.getElementById('autoRotateBtn');
@@ -675,19 +571,16 @@
             }
         }
 
-        // Text-To-Speech Pronunciation Feature
         document.getElementById('audioBtn').addEventListener('click', () => {
             const currentTitle = document.getElementById('partTitle').innerText;
             const utterance = new SpeechSynthesisUtterance(currentTitle);
             utterance.lang = 'en-US';
-            utterance.rate = 0.9; // Slightly slower for language learners
+            utterance.rate = 0.9;
             window.speechSynthesis.speak(utterance);
         });
 
-        // Initial setup execution
         switchSystem('brain');
 
-        // Animation Loop for Three.js Rendering
         function animate() {
             requestAnimationFrame(animate);
             if (autoRotate && !isDragging) {
@@ -697,7 +590,6 @@
         }
         animate();
 
-        // Handle Responsive Window Resizing
         window.addEventListener('resize', () => {
             const width = container.clientWidth;
             const height = container.clientHeight;
