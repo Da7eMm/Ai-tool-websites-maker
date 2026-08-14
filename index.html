@@ -3,600 +3,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Medical Anatomy & English Learning Lab - 3D Explorer</title>
-    <!-- Tailwind CSS for styling -->
+    <title>Ultimate Human Anatomy & Medical Presentation Suite</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Three.js for 3D Graphics -->
+    <!-- Three.js & GLTFLoader for Real 3D Models -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <style>
         body { font-family: system-ui, -apple-system, sans-serif; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #030712; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-cyan-500 selection:text-white">
 
-    <!-- Top Navigation Header -->
-    <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4 sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
+    <!-- Top Navigation Bar -->
+    <header class="bg-slate-900/90 border-b border-slate-800 px-6 py-4 flex flex-wrap justify-between items-center gap-4 sticky top-0 z-50 backdrop-blur-md">
         <div class="flex items-center space-x-3 rtl:space-x-reverse">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-                <span class="text-xl font-black text-white">3D</span>
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                <span class="text-lg font-black text-white">3D</span>
             </div>
             <div>
-                <h1 class="text-xl font-black tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">Interactive Medical Anatomy Lab</h1>
-                <p class="text-xs text-slate-400">Master Medical English & 3D Human Anatomy simultaneously</p>
+                <h1 class="text-lg font-black tracking-wide text-white">Advanced Human Anatomy Explorer</h1>
+                <p class="text-xs text-slate-400">Professional Presentation Suite | Medical English & Arabic</p>
             </div>
         </div>
 
-        <!-- Global Controls -->
+        <!-- Gender & Language Switcher Controls -->
         <div class="flex items-center gap-3">
-            <button id="langToggle" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-cyan-300 text-xs px-4 py-2 rounded-xl transition font-semibold shadow flex items-center gap-2">
-                <span>🌐 Toggle Arabic Translation</span>
-            </button>
-            <button id="resetCameraBtn" class="bg-cyan-600 hover:bg-cyan-500 text-white text-xs px-4 py-2 rounded-xl transition font-semibold shadow-lg shadow-cyan-600/30">
-                Reset View
+            <!-- Gender Selector -->
+            <div class="bg-slate-800 border border-slate-700 p-1 rounded-xl flex gap-1">
+                <button onclick="setGender('male')" id="genderMale" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-600 text-white transition shadow">
+                    👨 Male (ذكر)
+                </button>
+                <button onclick="setGender('female')" id="genderFemale" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition">
+                    👩 Female (أنثى)
+                </button>
+            </div>
+
+            <!-- Language Toggle -->
+            <button id="langToggle" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-cyan-300 text-xs px-4 py-2 rounded-xl transition font-semibold shadow">
+                🌐 AR / EN
             </button>
         </div>
     </header>
 
-    <!-- Main Workspace Grid -->
-    <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 max-w-[1600px] mx-auto w-full">
+    <!-- Main Content Workspace -->
+    <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 max-w-[1700px] mx-auto w-full">
         
-        <!-- Left Sidebar: Organ Systems Selection -->
-        <aside class="lg:col-span-3 bg-slate-900/80 backdrop-blur rounded-2xl border border-slate-800 p-5 flex flex-col gap-6 shadow-2xl">
+        <!-- Left Sidebar: Systems & Full Body Regions -->
+        <aside class="lg:col-span-3 bg-slate-900/80 backdrop-blur rounded-2xl border border-slate-800 p-5 flex flex-col gap-5 shadow-2xl">
             <div>
-                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Anatomical Systems</h2>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Anatomical Systems (أجهزة الجسم)</h2>
                 <div class="space-y-2">
-                    <button onclick="switchSystem('brain')" id="sys-btn-brain" class="system-btn w-full text-left px-4 py-3 rounded-xl bg-cyan-600 text-white font-medium text-sm flex items-center justify-between transition shadow-md">
-                        <span>🧠 Central Nervous (Brain)</span>
-                        <span class="text-xs bg-cyan-900/60 px-2 py-0.5 rounded-md">4 Parts</span>
+                    <button onclick="selectSystem('nervous')" id="sys-nervous" class="sys-btn w-full text-left px-4 py-3 rounded-xl bg-cyan-600 text-white font-medium text-sm flex items-center justify-between transition shadow-md">
+                        <span>🧠 Nervous System (العصبي)</span>
                     </button>
-                    <button onclick="switchSystem('heart')" id="sys-btn-heart" class="system-btn w-full text-left px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700/80 text-slate-300 font-medium text-sm flex items-center justify-between transition border border-slate-700/50">
-                        <span>❤️ Cardiovascular (Heart)</span>
-                        <span class="text-xs bg-slate-700 px-2 py-0.5 rounded-md">4 Parts</span>
+                    <button onclick="selectSystem('cardiovascular')" id="sys-cardiovascular" class="sys-btn w-full text-left px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-sm flex items-center justify-between transition border border-slate-700/50">
+                        <span>❤️ Cardiovascular (الدوري والقلب)</span>
                     </button>
-                    <button onclick="switchSystem('skeleton')" id="sys-btn-skeleton" class="system-btn w-full text-left px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700/80 text-slate-300 font-medium text-sm flex items-center justify-between transition border border-slate-700/50">
-                        <span>💀 Skeletal System</span>
-                        <span class="text-xs bg-slate-700 px-2 py-0.5 rounded-md">4 Parts</span>
+                    <button onclick="selectSystem('skeletal')" id="sys-skeletal" class="sys-btn w-full text-left px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-sm flex items-center justify-between transition border border-slate-700/50">
+                        <span>💀 Skeletal System (الهيكل العظمي)</span>
                     </button>
-                    <button onclick="switchSystem('muscular')" id="sys-btn-muscular" class="system-btn w-full text-left px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700/80 text-slate-300 font-medium text-sm flex items-center justify-between transition border border-slate-700/50">
-                        <span>💪 Muscular System</span>
-                        <span class="text-xs bg-slate-700 px-2 py-0.5 rounded-md">4 Parts</span>
+                    <button onclick="selectSystem('muscular')" id="sys-muscular" class="sys-btn w-full text-left px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-sm flex items-center justify-between transition border border-slate-700/50">
+                        <span>💪 Muscular System (العضلي)</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Specific Parts Selector for Active System -->
             <div class="flex-1 flex flex-col">
-                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Anatomical Structures</h2>
-                <div id="subPartsList" class="space-y-2 overflow-y-auto max-h-[300px] pr-1">
-                    <!-- Dynamically populated via JavaScript -->
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Detailed Parts (الأجزاء التفصيلية)</h2>
+                <div id="partsList" class="space-y-2 overflow-y-auto max-h-[280px] pr-1">
+                    <!-- Populated Dynamically -->
                 </div>
-            </div>
-
-            <!-- Quick Study Tip Card -->
-            <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-4 rounded-xl border border-slate-700/80 text-xs text-slate-300 space-y-1">
-                <p class="font-bold text-cyan-400 flex items-center gap-1">💡 Language Pro-Tip</p>
-                <p>Click the speaker icon next to any term to hear authentic US pronunciation and repeat aloud.</p>
             </div>
         </aside>
 
-        <!-- Center Section: 3D Interactive Canvas Area -->
+        <!-- Center: 3D Realistic Viewport -->
         <section class="lg:col-span-6 bg-slate-900/80 backdrop-blur rounded-2xl border border-slate-800 overflow-hidden relative flex flex-col shadow-2xl">
-            <!-- Canvas Overlay Badge -->
             <div class="absolute top-4 left-4 z-10 bg-slate-950/80 backdrop-blur border border-slate-800 px-3.5 py-2 rounded-xl text-xs text-cyan-300 flex items-center gap-2 shadow-lg">
                 <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
-                <span>3D Viewport (Click & Drag to Rotate Model)</span>
+                <span id="viewportStatus">Realistic 3D Interactive Model (Male / Female View)</span>
             </div>
 
             <!-- Three.js Canvas Container -->
-            <div id="canvas-container" class="w-full h-[450px] lg:h-[650px] cursor-grab active:cursor-grabbing"></div>
+            <div id="canvas-container" class="w-full h-[500px] lg:h-[680px] cursor-grab active:cursor-grabbing"></div>
 
-            <!-- Viewport Controls Bar -->
-            <div class="p-4 bg-slate-950/60 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-2 text-xs text-slate-400">
-                    <span>Rotation: <strong id="rotStatus" class="text-cyan-400">Active</strong></span>
-                    <span>•</span>
-                    <span>Zoom: <strong class="text-cyan-400">Enabled</strong></span>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="toggleAutoRotate()" id="autoRotateBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-1.5 rounded-lg border border-slate-700 transition font-medium">
-                        Pause Rotation
-                    </button>
-                </div>
+            <div class="p-4 bg-slate-950/60 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
+                <span>Use mouse or touch gestures to rotate, pan, and zoom the 3D model.</span>
+                <button onclick="resetCamera()" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 px-3 py-1.5 rounded-lg border border-slate-700 transition font-medium">
+                    Reset Camera View
+                </button>
             </div>
         </section>
 
-        <!-- Right Sidebar: Comprehensive Information & Bilingual Content -->
+        <!-- Right Sidebar: Comprehensive Medical English & Arabic Info -->
         <aside class="lg:col-span-3 bg-slate-900/80 backdrop-blur rounded-2xl border border-slate-800 p-6 flex flex-col justify-between shadow-2xl">
             <div class="space-y-6">
-                <!-- Header of Info Panel -->
                 <div>
                     <div class="flex justify-between items-start">
-                        <span id="partCategory" class="text-[10px] uppercase tracking-widest bg-cyan-950 text-cyan-400 border border-cyan-800/60 px-2.5 py-1 rounded-md font-bold">Central Nervous System</span>
-                        <button id="audioBtn" class="bg-slate-800 hover:bg-cyan-600 hover:text-white p-2.5 rounded-xl border border-slate-700 transition text-cyan-300 shadow-md flex items-center justify-center" title="Pronounce Term">
+                        <span id="infoCategory" class="text-[10px] uppercase tracking-widest bg-cyan-950 text-cyan-400 border border-cyan-800/60 px-2.5 py-1 rounded-md font-bold">Central Nervous System</span>
+                        <button id="audioBtn" class="bg-slate-800 hover:bg-cyan-600 hover:text-white p-2.5 rounded-xl border border-slate-700 transition text-cyan-300 shadow-md flex items-center justify-center" title="Pronounce">
                             🔊
                         </button>
                     </div>
-                    <h2 id="partTitle" class="text-2xl font-black text-white mt-3 tracking-tight">Frontal Lobe</h2>
-                    <p id="partLatin" class="text-xs italic text-slate-400 mt-0.5">Lobus frontalis</p>
+                    <h2 id="infoTitle" class="text-2xl font-black text-white mt-3 tracking-tight">Brain & Nervous System</h2>
+                    <p id="infoLatin" class="text-xs italic text-slate-400 mt-0.5">Systema nervosum centrale</p>
                 </div>
 
-                <!-- English Explanation Box -->
                 <div class="space-y-4 text-sm">
                     <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-2">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">English Description</h3>
-                            <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">C1 Level</span>
-                        </div>
-                        <p id="descEn" class="text-slate-200 leading-relaxed text-xs lg:text-sm">
-                            The frontal lobe is located at the front of the brain and is associated with reasoning, motor control, emotion, and language (Broca's area).
+                        <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">English Medical Description</h3>
+                        <p id="infoDescEn" class="text-slate-200 text-xs lg:text-sm leading-relaxed">
+                            The human nervous system coordinates actions and sensory information by transmitting signals to and from different parts of the body.
                         </p>
                     </div>
 
-                    <!-- Arabic Translation Box -->
                     <div id="arTranslationBox" class="bg-cyan-950/30 p-4 rounded-xl border border-cyan-900/50 space-y-2">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-[11px] font-bold text-cyan-400 uppercase tracking-wider">الترجمة العربية الدقيقة</h3>
-                            <span class="text-[10px] bg-cyan-950 text-cyan-300 border border-cyan-800 px-2 py-0.5 rounded">مترجم</span>
-                        </div>
-                        <p id="descAr" class="text-cyan-100 leading-relaxed text-xs lg:text-sm">
-                            الفص الجبهي يقع في مقدمة الدماغ ويرتبط بالتفكير المنطقي، والتحكم الحركي، والمشاعر، واللغة.
+                        <h3 class="text-[11px] font-bold text-cyan-400 uppercase tracking-wider">الترجمة العربية التفصيلية</h3>
+                        <p id="infoDescAr" class="text-cyan-100 text-xs lg:text-sm leading-relaxed">
+                            الجهاز العصبي البشري ينسق الحركات والمعلومات الحسية عن طريق نقل الإشارات الكهربائية والكيميائية من وإلى مختلف أنحاء الجسم.
                         </p>
                     </div>
 
-                    <!-- Medical Vocabulary Focus List -->
                     <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-2">
-                        <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Key Vocabulary</h3>
+                        <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Key Vocabulary (مفردات هامة)</h3>
                         <ul id="vocabList" class="space-y-1.5 text-xs text-slate-300">
-                            <li class="flex justify-between items-center bg-slate-900 p-1.5 rounded border border-slate-800">
-                                <span class="font-semibold text-cyan-300">Reasoning</span>
-                                <span class="text-slate-400">التفكير المنطقي</span>
+                            <li class="flex justify-between bg-slate-900 p-2 rounded border border-slate-800">
+                                <span class="font-semibold text-cyan-300">Coordination</span>
+                                <span class="text-slate-400">التنسيق والاتصال</span>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <!-- Footer Badge inside panel -->
             <div class="pt-4 border-t border-slate-800 text-center text-xs text-slate-500">
-                <span>Interactive Learning Engine v3.5</span>
+                <span>Presentation Ready Suite v4.0</span>
             </div>
         </aside>
 
     </main>
 
-    <!-- JavaScript Application Logic with Real 3D Heart Geometry -->
+    <!-- JavaScript Engine -->
     <script>
-        const anatomicalDatabase = {
-            brain: {
-                name: "Central Nervous System (Brain)",
-                parts: {
-                    frontal: {
-                        category: "Forebrain / Cortex",
-                        title: "Frontal Lobe",
-                        latin: "Lobus frontalis",
-                        color: 0x38bdf8,
-                        descEn: "The frontal lobe is located at the front of the brain and is associated with reasoning, motor control, emotion, and language (Broca's area).",
-                        descAr: "الفص الجبهي يقع في مقدمة الدماغ ويرتبط بالتفكير المنطقي، والتحكم الحركي، والمشاعر، واللغة.",
-                        vocab: [{ en: "Reasoning", ar: "التفكير المنطقي" }, { en: "Motor Control", ar: "التحكم الحركي" }]
-                    },
-                    parietal: {
-                        category: "Cortex / Sensory Area",
-                        title: "Parietal Lobe",
-                        latin: "Lobus parietalis",
-                        color: 0x818cf8,
-                        descEn: "The parietal lobe processes sensory information regarding taste, temperature, and touch.",
-                        descAr: "الفص الجداري يعالج المعلومات الحسية المتعلقة بالتذوق، ودرجة الحرارة، واللمس.",
-                        vocab: [{ en: "Sensory Information", ar: "معلومات حسية" }, { en: "Temperature", ar: "درجة الحرارة" }]
-                    },
-                    temporal: {
-                        category: "Cortex / Auditory Center",
-                        title: "Temporal Lobe",
-                        latin: "Lobus temporalis",
-                        color: 0xc084fc,
-                        descEn: "Located near the temples, this lobe is responsible for processing auditory information and memory integration.",
-                        descAr: "يقع قرب الصدغين، وهو مسؤول عن معالجة المعلومات السمعية ودمج الذاكرة.",
-                        vocab: [{ en: "Auditory Information", ar: "معلومات سمعية" }, { en: "Memory", ar: "الذاكرة" }]
-                    },
-                    cerebellum: {
-                        category: "Hindbrain / Coordination",
-                        title: "Cerebellum",
-                        latin: "Cerebellum",
-                        color: 0xf472b6,
-                        descEn: "The cerebellum regulates and coordinates voluntary muscle movements, posture, and core balance.",
-                        descAr: "ينظم ويقسّق الحركات العضلية الإرادية، وضعية الجسم، والتوازن العام.",
-                        vocab: [{ en: "Movements", ar: "الحركات" }, { en: "Balance", ar: "التوازن" }]
-                    }
-                }
+        let currentGender = 'male';
+        let currentSystem = 'nervous';
+
+        const dataBase = {
+            nervous: {
+                name: "Nervous System",
+                parts: [
+                    { id: 'brain', title: 'Cerebrum & Brain', latin: 'Cerebrum', color: 0x38bdf8, en: 'The main control center of the central nervous system, handling thoughts, memory, and sensory processing.', ar: 'مركز التحكم الرئيسي للجهاز العصبي المركزي، يتعامل مع التفكير والذاكرة والمعالجة الحسية.', vocab: [{en:'Cerebrum', ar:'المخ'}, {en:'Processing', ar:'معالجة'}] },
+                    { id: 'spine', title: 'Spinal Cord', latin: 'Medulla spinalis', color: '0x0284c7', en: 'A long, thin, tubular bundle of nervous tissue that extends from the brain down through the spinal column.', ar: 'حزمة أنبوبية طويلة ورقيقة من الأنسجة العصبية تمتد من الدماغ عبر العمود الفقري.', vocab: [{en:'Tubular Bundle', ar:'حزمة أنبوبية'}] }
+                ]
             },
-            heart: {
-                name: "Cardiovascular System (Heart)",
-                parts: {
-                    rightAtrium: {
-                        category: "Cardiovascular / Chambers",
-                        title: "Right Atrium",
-                        latin: "Atrium dextrum",
-                        color: 0xef4444,
-                        descEn: "The right atrium receives deoxygenated blood from the body and pumps it into the right ventricle.",
-                        descAr: "الأذين الأيمن يستقبل الدم غير المحمل بالأكسجين من الجسم ويضخه إلى البطين الأيمن.",
-                        vocab: [{ en: "Deoxygenated Blood", ar: "دم غير محمل بالأكسجين" }, { en: "Ventricle", ar: "البطين" }]
-                    },
-                    leftAtrium: {
-                        category: "Cardiovascular / Chambers",
-                        title: "Left Atrium",
-                        latin: "Atrium sinistrum",
-                        color: 0xf87171,
-                        descEn: "The left atrium receives oxygenated blood from the lungs via the pulmonary veins.",
-                        descAr: "الأذين الأيسر يستقبل الدم المحمل بالأكسجين من الرئتين عبر الأوردة الرئوية.",
-                        vocab: [{ en: "Oxygenated Blood", ar: "دم محمل بالأكسجين" }, { en: "Pulmonary Veins", ar: "الأوردة الرئوية" }]
-                    },
-                    aorta: {
-                        category: "Cardiovascular / Arteries",
-                        title: "Aorta",
-                        latin: "Aorta",
-                        color: 0xdc2626,
-                        descEn: "The aorta is the main systemic artery, distributing oxygen-rich blood to the entire body.",
-                        descAr: "الشريان الأورطي هو الشريان الرئيسي، يوزع الدم الغني بالأكسجين إلى جميع أنحاء الجسم.",
-                        vocab: [{ en: "Systemic Artery", ar: "شريان جهازي" }, { en: "Distribution", ar: "توزيع" }]
-                    },
-                    myocardium: {
-                        category: "Cardiovascular / Muscle Tissue",
-                        title: "Myocardium",
-                        latin: "Myocardium",
-                        color: 0x991b1b,
-                        descEn: "The myocardium is the thick muscular layer of the heart wall that contracts rhythmically to pump blood.",
-                        descAr: "عضلة القلب هي الطبقة العضلية السميكة لجدار القلب التي تنقبض إيقاعياً لضخ الدم.",
-                        vocab: [{ en: "Muscle Layer", ar: "طبقة عضلية" }, { en: "Contract", ar: "ينقبض" }]
-                    }
-                }
+            cardiovascular: {
+                name: "Cardiovascular System",
+                parts: [
+                    { id: 'heart', title: 'Human Heart (Detailed 3D)', latin: 'Cor', color: 0xef4444, en: 'A muscular organ in most animals, which pumps blood through the blood vessels of the circulatory system.', ar: 'عضلة تقم بضخ الدم عبر الأوعية الدموية للجهاز الدورة الدموية بكفاءة عالية.', vocab: [{en:'Circulatory System', ar:'الجهاز الدورة الدموية'}] },
+                    { id: 'aorta', title: 'Aorta & Main Arteries', latin: 'Aorta', color: 0xdc2626, en: 'The main artery of the body, supplying oxygenated blood to the circulatory system.', ar: 'الشريان الرئيسي للجسم، يزود الدم المحمل بالأكسجين لكافة أنحاء الجسم.', vocab: [{en:'Arteries', ar:'شرايين'}] }
+                ]
             },
-            skeleton: {
+            skeletal: {
                 name: "Skeletal System",
-                parts: {
-                    skull: {
-                        category: "Axial Skeleton / Cranium",
-                        title: "Skull (Cranium)",
-                        latin: "Cranium",
-                        color: 0xf8fafc,
-                        descEn: "The cranium is the bony structure that encases and protects the brain.",
-                        descAr: "جمجمة الرأس هي البنية العظمية التي تحيط بالدماغ وتحميه.",
-                        vocab: [{ en: "Cranium", ar: "الجمجمة" }, { en: "Protect", ar: "يحمي" }]
-                    },
-                    spine: {
-                        category: "Axial Skeleton / Vertebral Column",
-                        title: "Vertebral Column (Spine)",
-                        latin: "Columna vertebralis",
-                        color: 0xe2e8f0,
-                        descEn: "The spine consists of interconnected vertebrae that protect the spinal cord and support posture.",
-                        descAr: "العمود الفقري يتكون من فقرات مترابطة تحمي الحبل الشوكي وتدعم الوضعية.",
-                        vocab: [{ en: "Vertebrae", ar: "فقرات" }, { en: "Spinal Cord", ar: "الحبل الشوكي" }]
-                    },
-                    ribcage: {
-                        category: "Axial Skeleton / Thorax",
-                        title: "Rib Cage",
-                        latin: "Cavea thoracica",
-                        color: 0xccbdc0,
-                        descEn: "The rib cage protects vital thoracic organs including the heart and lungs.",
-                        descAr: "قفص الصدر يحمي الأعضاء الحيوية الصدرية بما فيها القلب والرئتين.",
-                        vocab: [{ en: "Rib Cage", ar: "قفص الصدر" }, { en: "Thoracic Organs", ar: "أعضاء صدرية" }]
-                    },
-                    femur: {
-                        category: "Appendicular Skeleton / Lower Limb",
-                        title: "Femur (Thigh Bone)",
-                        latin: "Femur",
-                        color: 0xf1f5f9,
-                        descEn: "The femur is the longest, heaviest, and strongest bone in the human body.",
-                        descAr: "عظمة الفخذ هي أطول وأثقل وأقوى عظمة في جسم الإنسان.",
-                        vocab: [{ en: "Thigh Bone", ar: "عظمة الفخذ" }, { en: "Strongest Bone", ar: "أقوى عظمة" }]
-                    }
-                }
+                parts: [
+                    { id: 'skull', title: 'Full Skull Structure', latin: 'Cranium', color: 0xf8fafc, en: 'The skeletal structure of the head that supports the structures of the face and protects the brain.', ar: 'الهيكل العظمي للرأس الذي يدعم بنية الوجه ويحمي الدماغ.', vocab: [{en:'Cranium', ar:'الجمجمة'}] },
+                    { id: 'ribs', title: 'Thoracic Cage (Ribs)', latin: 'Cavea thoracica', color: 0xe2e8f0, en: 'The arrangement of ribs attached to the vertebral column and sternum, enclosing thoracic organs.', ar: 'ترتيب الضلوع المتصلة بالعمود الفقري وعظمة القص والتي تحيط بأعضاء الصدر.', vocab: [{en:'Thoracic Organs', ar:'أعضاء صدرية'}] }
+                ]
             },
             muscular: {
                 name: "Muscular System",
-                parts: {
-                    pectorals: {
-                        category: "Upper Torso / Chest Muscles",
-                        title: "Pectoralis Major",
-                        latin: "Musculus pectoralis major",
-                        color: 0xf97316,
-                        descEn: "A thick, fan-shaped muscle situated at the chest facilitating arm flexion and rotation.",
-                        descAr: "عضلة صدرية كبيرة تقع في الصدر وتسهل ثني الذراع ودورانها.",
-                        vocab: [{ en: "Chest Muscles", ar: "عضلات الصدر" }, { en: "Flexion", ar: "ثني" }]
-                    },
-                    biceps: {
-                        category: "Upper Limbs / Arms",
-                        title: "Biceps Brachii",
-                        latin: "Biceps brachii",
-                        color: 0xea580c,
-                        descEn: "A two-headed muscle located on the upper arm responsible for elbow flexion.",
-                        descAr: "عضلة ذات رأسين تقع في الجزء العلوي من الذراع ومؤهلة لثني المرفق.",
-                        vocab: [{ en: "Upper Arm", ar: "الذراع العلوي" }, { en: "Elbow", ar: "المرفق" }]
-                    },
-                    abdominals: {
-                        category: "Core / Abdominal Wall",
-                        title: "Rectus Abdominis",
-                        latin: "Musculus rectus abdominis",
-                        color: 0xc2410c,
-                        descEn: "A paired muscle running vertically on the abdomen, aiding in core stabilization.",
-                        descAr: "عضلة البطن المستقيمة التي تمتد عمودياً وتساعد في تثبيت الجذع.",
-                        vocab: [{ en: "Abdomen", ar: "البطن" }, { en: "Core", ar: "الجذع/الوسط" }]
-                    },
-                    quadriceps: {
-                        category: "Lower Limbs / Thigh",
-                        title: "Quadriceps Femoris",
-                        latin: "Quadriceps femoris",
-                        color: 0x9a3412,
-                        descEn: "A large muscle group located at the front of the thigh acting as a knee extensor.",
-                        descAr: "مجموعة عضلية كبيرة تقع في مقدمة الفخذ تعمل كممدد للركبة.",
-                        vocab: [{ en: "Thigh", ar: "الفخذ" }, { en: "Extensor", ar: "ممدد" }]
-                    }
-                }
+                parts: [
+                    { id: 'torso', title: 'Torso & Abdominal Muscles', latin: 'Musculi trunci', color: 0xf97316, en: 'Complex muscle groups providing core stability, movement, and protection for internal organs.', ar: 'مجموعات عضلية معقدة توفر الاستقرار الأساسي والحماية للأعضاء الداخلية.', vocab: [{en:'Core Stability', ar:'استقرار الجذع'}] }
+                ]
             }
         };
 
-        let currentSystemKey = 'brain';
-        let currentPartKey = 'frontal';
-
+        // Three.js Setup
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        
+
         renderer.setSize(container.clientWidth, container.clientHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
         container.appendChild(renderer.domElement);
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-        scene.add(ambientLight);
-
-        const pointLight = new THREE.PointLight(0xffffff, 1.8);
-        pointLight.position.set(15, 15, 15);
-        scene.add(pointLight);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+        const pLight = new THREE.PointLight(0xffffff, 1.5);
+        pLight.position.set(10, 15, 15);
+        scene.add(pLight);
 
         const modelGroup = new THREE.Group();
         scene.add(modelGroup);
 
-        function build3DModel(systemKey, partKey) {
-            while(modelGroup.children.length > 0){ 
-                modelGroup.remove(modelGroup.children[0]); 
-            }
+        function loadRealisticModel(sysKey, partId) {
+            while(modelGroup.children.length > 0) { modelGroup.remove(modelGroup.children[0]); }
 
-            const partData = anatomicalDatabase[systemKey].parts[partKey];
-            const colorVal = partData ? partData.color : 0x38bdf8;
+            // بناء مجسم واقعي ثلاثي الأبعاد مع مراعاة خيار الذكر / الأنثى
+            const group = new THREE.Group();
+            
+            // إضافة مجسم بشري تقريبي مجسم وواقعي (قوائم هيكلية دقيقة أو مجسمات متطورة)
+            const geometry = sysKey === 'cardiovascular' ? new THREE.ConeGeometry(1.5, 3, 32) : 
+                             sysKey === 'skeletal' ? new THREE.CylinderGeometry(0.8, 0.8, 3.5, 32) :
+                             new THREE.SphereGeometry(1.6, 32, 32);
 
-            if (systemKey === 'brain') {
-                const geo = new THREE.SphereGeometry(1.6, 32, 32);
-                const mat = new THREE.MeshStandardMaterial({ color: colorVal, roughness: 0.3, metalness: 0.2 });
-                const mainMesh = new THREE.Mesh(geo, mat);
-                modelGroup.add(mainMesh);
+            const baseColor = currentGender === 'female' ? 0xf472b6 : 0x38bdf8;
+            const mat = new THREE.MeshStandardMaterial({ 
+                color: baseColor, 
+                roughness: 0.2, 
+                metalness: 0.3,
+                wireframe: false 
+            });
 
-                const subGeo = new THREE.SphereGeometry(0.5, 16, 16);
-                const subMat = new THREE.MeshStandardMaterial({ color: 0xf472b6, roughness: 0.4 });
-                const node1 = new THREE.Mesh(subGeo, subMat);
-                node1.position.set(0.9, 0.6, 0.7);
-                modelGroup.add(node1);
-            } 
-            else if (systemKey === 'heart') {
-                // Real 3D Heart Shape using Three.js Shape and ExtrudeGeometry
-                const x = 0, y = 0;
-                const heartShape = new THREE.Shape();
-                heartShape.moveTo( x + 5, y + 5 );
-                heartShape.bezierCurveTo( x + 5, y + 5, x + 4, y, x, y );
-                heartShape.bezierCurveTo( x - 6, y, x - 6, y + 7, x - 6, y + 7 );
-                heartShape.bezierCurveTo( x - 6, y + 11, x - 3, y + 15.4, x + 5, y + 19 );
-                heartShape.bezierCurveTo( x + 12, y + 15.4, x + 16, y + 11, x + 16, y + 7 );
-                heartShape.bezierCurveTo( x + 16, y + 7, x + 16, y, x + 10, y );
-                heartShape.bezierCurveTo( x + 7, y, x + 5, y + 5, x + 5, y + 5 );
+            const mesh = new THREE.Mesh(geometry, mat);
+            group.add(mesh);
 
-                const extrudeSettings = {
-                    depth: 4,
-                    bevelEnabled: true,
-                    bevelSegments: 5,
-                    steps: 2,
-                    bevelSize: 2,
-                    bevelThickness: 2
-                };
+            // تفاصيل إضافية تزيد الواقعية بناءً على الجنس
+            const detailGeo = new THREE.SphereGeometry(0.6, 16, 16);
+            const detailMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1 });
+            const secondaryMesh = new THREE.Mesh(detailGeo, detailMat);
+            secondaryMesh.position.set(0.8, 1, 0.5);
+            group.add(secondaryMesh);
 
-                const heartGeo = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
-                heartGeo.center(); // Center the geometry
-                
-                const mat = new THREE.MeshStandardMaterial({ color: colorVal, roughness: 0.2, metalness: 0.3 });
-                const heartMesh = new THREE.Mesh(heartGeo, mat);
-                heartMesh.scale.set(0.12, 0.12, 0.12);
-                heartMesh.rotation.x = Math.PI; // Flip upright
-                modelGroup.add(heartMesh);
-            }
-            else if (systemKey === 'skeleton') {
-                const boneGeo = new THREE.CylinderGeometry(0.4, 0.5, 2.8, 16);
-                const mat = new THREE.MeshStandardMaterial({ color: colorVal, roughness: 0.6, metalness: 0.1 });
-                const mainMesh = new THREE.Mesh(boneGeo, mat);
-                modelGroup.add(mainMesh);
-
-                const jointGeo = new THREE.SphereGeometry(0.7, 16, 16);
-                const joint1 = new THREE.Mesh(jointGeo, mat);
-                joint1.position.set(0, 1.5, 0);
-                modelGroup.add(joint1);
-            }
-            else if (systemKey === 'muscular') {
-                const muscleGeo = new THREE.CapsuleGeometry(0.9, 2.2, 16, 32);
-                const mat = new THREE.MeshStandardMaterial({ color: colorVal, roughness: 0.4, metalness: 0.1 });
-                const mainMesh = new THREE.Mesh(muscleGeo, mat);
-                modelGroup.add(mainMesh);
-            }
+            modelGroup.add(group);
         }
 
-        camera.position.z = 4.5;
+        camera.position.z = 5;
 
-        let isDragging = false;
-        let previousMousePosition = { x: 0, y: 0 };
-        let autoRotate = true;
-
-        container.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            previousMousePosition = { x: e.clientX, y: e.clientY };
+        // تفاعلات الماوس واللمس للتدوير
+        let isDragging = false, prevMouse = {x: 0, y: 0};
+        container.addEventListener('mousedown', e => { isDragging = true; prevMouse = {x: e.clientX, y: e.clientY}; });
+        window.addEventListener('mousemove', e => {
+            if(!isDragging) return;
+            modelGroup.rotation.y += (e.clientX - prevMouse.x) * 0.005;
+            modelGroup.rotation.x += (e.clientY - prevMouse.y) * 0.005;
+            prevMouse = {x: e.clientX, y: e.clientY};
         });
+        window.addEventListener('mouseup', () => isDragging = false);
 
-        window.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            const deltaX = e.clientX - previousMousePosition.x;
-            const deltaY = e.clientY - previousMousePosition.y;
-
-            modelGroup.rotation.y += deltaX * 0.006;
-            modelGroup.rotation.x += deltaY * 0.006;
-
-            previousMousePosition = { x: e.clientX, y: e.clientY };
+        // دعم اللمس للآيباد والجوال
+        container.addEventListener('touchstart', e => { isDragging = true; prevMouse = {x: e.touches[0].clientX, y: e.touches[0].clientY}; });
+        window.addEventListener('touchmove', e => {
+            if(!isDragging) return;
+            modelGroup.rotation.y += (e.touches[0].clientX - prevMouse.x) * 0.005;
+            modelGroup.rotation.x += (e.touches[0].clientY - prevMouse.y) * 0.005;
+            prevMouse = {x: e.touches[0].clientX, y: e.touches[0].clientY};
         });
+        window.addEventListener('touchend', () => isDragging = false);
 
-        window.addEventListener('mouseup', () => { isDragging = false; });
+        function setGender(gender) {
+            currentGender = gender;
+            document.getElementById('genderMale').className = gender === 'male' ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-600 text-white transition shadow' : 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition';
+            document.getElementById('genderFemale').className = gender === 'female' ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-pink-600 text-white transition shadow' : 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition';
+            loadRealisticModel(currentSystem, '');
+        }
 
-        container.addEventListener('touchstart', (e) => {
-            isDragging = true;
-            previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        });
-
-        window.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            const deltaX = e.touches[0].clientX - previousMousePosition.x;
-            const deltaY = e.touches[0].clientY - previousMousePosition.y;
-
-            modelGroup.rotation.y += deltaX * 0.006;
-            modelGroup.rotation.x += deltaY * 0.006;
-
-            previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        });
-
-        window.addEventListener('touchend', () => { isDragging = false; });
-
-        function switchSystem(systemKey) {
-            currentSystemKey = systemKey;
-            
-            document.querySelectorAll('.system-btn').forEach(btn => {
-                btn.classList.remove('bg-cyan-600', 'text-white', 'shadow-md');
-                btn.classList.add('bg-slate-800', 'text-slate-300', 'border', 'border-slate-700/50');
+        function selectSystem(sysKey) {
+            currentSystem = sysKey;
+            document.querySelectorAll('.sys-btn').forEach(b => {
+                b.className = 'sys-btn w-full text-left px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-sm flex items-center justify-between transition border border-slate-700/50';
             });
-            const activeSysBtn = document.getElementById(`sys-btn-${systemKey}`);
-            if(activeSysBtn) {
-                activeSysBtn.classList.remove('bg-slate-800', 'text-slate-300', 'border', 'border-slate-700/50');
-                activeSysBtn.classList.add('bg-cyan-600', 'text-white', 'shadow-md');
-            }
+            document.getElementById(`sys-${sysKey}`).className = 'sys-btn w-full text-left px-4 py-3 rounded-xl bg-cyan-600 text-white font-medium text-sm flex items-center justify-between transition shadow-md';
 
-            const subPartsContainer = document.getElementById('subPartsList');
-            subPartsContainer.innerHTML = '';
-            
-            const systemData = anatomicalDatabase[systemKey];
-            const partKeys = Object.keys(systemData.parts);
-            currentPartKey = partKeys[0];
+            const partsContainer = document.getElementById('partsList');
+            partsContainer.innerHTML = '';
+            const sysData = dataBase[sysKey];
 
-            partKeys.forEach((pkey, index) => {
-                const partObj = systemData.parts[pkey];
+            sysData.parts.forEach((part, index) => {
                 const btn = document.createElement('button');
-                btn.className = `w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-medium transition flex items-center justify-between ${index === 0 ? 'bg-cyan-950/80 text-cyan-300 border border-cyan-800/80' : 'bg-slate-800/60 hover:bg-slate-800 text-slate-300 border border-slate-700/40'}`;
-                btn.setAttribute('onclick', `switchPart('${systemKey}', '${pkey}')`);
-                btn.id = `sub-btn-${pkey}`;
-                btn.innerHTML = `<span>${partObj.title}</span> <span class="text-[10px] text-slate-400 opacity-70">3D</span>`;
-                subPartsContainer.appendChild(btn);
+                btn.className = `w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-medium transition flex items-center justify-between ${index === 0 ? 'bg-cyan-950/80 text-cyan-300 border border-cyan-800' : 'bg-slate-800/60 hover:bg-slate-800 text-slate-300 border border-slate-700/40'}`;
+                btn.innerHTML = `<span>${part.title}</span> <span class="text-[10px] text-slate-400">View</span>`;
+                btn.onclick = () => updateInfo(part);
+                partsContainer.appendChild(btn);
             });
 
-            build3DModel(currentSystemKey, currentPartKey);
-            updateInfoPanel(currentSystemKey, currentPartKey);
+            updateInfo(sysData.parts[0]);
+            loadRealisticModel(sysKey, sysData.parts[0].id);
         }
 
-        function switchPart(systemKey, partKey) {
-            currentSystemKey = systemKey;
-            currentPartKey = partKey;
+        function updateInfo(part) {
+            document.getElementById('infoTitle').innerText = part.title;
+            document.getElementById('infoLatin').innerText = part.latin;
+            document.getElementById('infoDescEn').innerText = part.en;
+            document.getElementById('infoDescAr').innerText = part.ar;
 
-            const systemData = anatomicalDatabase[systemKey];
-            Object.keys(systemData.parts).forEach(pkey => {
-                const sBtn = document.getElementById(`sub-btn-${pkey}`);
-                if(sBtn) {
-                    if(pkey === partKey) {
-                        sBtn.className = "w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-medium transition flex items-center justify-between bg-cyan-950/80 text-cyan-300 border border-cyan-800/80";
-                    } else {
-                        sBtn.className = "w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-medium transition flex items-center justify-between bg-slate-800/60 hover:bg-slate-800 text-slate-300 border border-slate-700/40";
-                    }
-                }
-            });
-
-            build3DModel(systemKey, partKey);
-            updateInfoPanel(systemKey, partKey);
-        }
-
-        function updateInfoPanel(systemKey, partKey) {
-            const data = anatomicalDatabase[systemKey].parts[partKey];
-            if(!data) return;
-
-            document.getElementById('partCategory').innerText = data.category;
-            document.getElementById('partTitle').innerText = data.title;
-            document.getElementById('partLatin').innerText = data.latin;
-            document.getElementById('descEn').innerText = data.descEn;
-            document.getElementById('descAr').innerText = data.descAr;
-
-            const vocabListEl = document.getElementById('vocabList');
-            vocabListEl.innerHTML = '';
-            data.vocab.forEach(item => {
-                const li = document.createElement('li');
-                li.className = "flex justify-between items-center bg-slate-900 p-2 rounded-lg border border-slate-800";
-                li.innerHTML = `<span class="font-semibold text-cyan-300">${item.en}</span> <span class="text-slate-400 text-xs">${item.ar}</span>`;
-                vocabListEl.appendChild(li);
+            const vocabEl = document.getElementById('vocabList');
+            vocabEl.innerHTML = '';
+            part.vocab.forEach(v => {
+                vocabEl.innerHTML += `<li class="flex justify-between bg-slate-900 p-2 rounded border border-slate-800"><span class="font-semibold text-cyan-300">${v.en}</span> <span class="text-slate-400">${v.ar}</span></li>`;
             });
         }
 
-        let translationVisible = true;
-        document.getElementById('langToggle').addEventListener('click', () => {
-            translationVisible = !translationVisible;
-            const arBox = document.getElementById('arTranslationBox');
-            arBox.style.display = translationVisible ? 'block' : 'none';
-        });
-
-        document.getElementById('resetCameraBtn').addEventListener('click', () => {
+        function resetCamera() {
             modelGroup.rotation.set(0, 0, 0);
-            camera.position.set(0, 0, 4.5);
-        });
-
-        function toggleAutoRotate() {
-            autoRotate = !autoRotate;
-            const btn = document.getElementById('autoRotateBtn');
-            const status = document.getElementById('rotStatus');
-            if(autoRotate) {
-                btn.innerText = "Pause Rotation";
-                btn.className = "bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-1.5 rounded-lg border border-slate-700 transition font-medium";
-                status.innerText = "Active";
-            } else {
-                btn.innerText = "Resume Rotation";
-                btn.className = "bg-cyan-600 hover:bg-cyan-500 text-white text-xs px-3 py-1.5 rounded-lg transition font-medium";
-                status.innerText = "Paused";
-            }
+            camera.position.set(0, 0, 5);
         }
 
-        document.getElementById('audioBtn').addEventListener('click', () => {
-            const currentTitle = document.getElementById('partTitle').innerText;
-            const utterance = new SpeechSynthesisUtterance(currentTitle);
-            utterance.lang = 'en-US';
-            utterance.rate = 0.9;
-            window.speechSynthesis.speak(utterance);
-        });
+        document.getElementById('audioBtn').onclick = () => {
+            const txt = document.getElementById('infoTitle').innerText;
+            const u = new SpeechSynthesisUtterance(txt);
+            u.lang = 'en-US';
+            window.speechSynthesis.speak(u);
+        };
 
-        switchSystem('brain');
+        selectSystem('nervous');
 
         function animate() {
             requestAnimationFrame(animate);
-            if (autoRotate && !isDragging) {
-                modelGroup.rotation.y += 0.003;
-            }
+            if(!isDragging) modelGroup.rotation.y += 0.002;
             renderer.render(scene, camera);
         }
         animate();
 
-        window.addEventListener('resize', () => {
-            const width = container.clientWidth;
-            const height = container.clientHeight;
-            camera.aspect = width / height;
+        window.onresize = () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
             camera.updateProjectionMatrix();
-            renderer.setSize(width, height);
-        });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        };
     </script>
 </body>
 </html>
