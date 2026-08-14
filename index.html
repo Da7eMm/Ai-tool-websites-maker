@@ -1,673 +1,710 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anatomy Lab — تعلّم أعضاء الجسم بالإنجليزي</title>
-<meta name="description" content="موقع تفاعلي ثلاثي الأبعاد لتعلّم أسماء أعضاء الجسم بالإنجليزي مع الترجمة والنطق واختبارات تفاعلية">
-<meta property="og:title" content="Anatomy Lab — تعلّم أعضاء الجسم بالإنجليزي">
-<meta property="og:description" content="جسم بشري 3D تفاعلي، بطاقات تعلّم مقلوبة، نطق صوتي، واختبار لكل جهاز من أجهزة الجسم">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🫀</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg: #0A1420;
-    --panel: #101E2E;
-    --panel2: #14263A;
-    --line: #1E3448;
-    --teal: #4FD1C5;
-    --coral: #FF6859;
-    --gold: #FBBF24;
-    --text: #F1F5F9;
-    --sub: #7C93AC;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html,body{height:100%; background:var(--bg); color:var(--text); font-family:'Cairo',sans-serif; overflow:hidden;}
-  .en{font-family:'Space Grotesk','Inter',sans-serif; direction:ltr; unicode-bidi:isolate;}
-  button{font-family:inherit;}
-  :focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
-
-  #app{display:grid; grid-template-columns: 1fr 380px; height:100vh; width:100vw;}
-  #stage{position:relative; overflow:hidden; background: radial-gradient(circle at 30% 20%, #122336 0%, var(--bg) 55%); touch-action:none;}
-  #stage canvas{display:block; touch-action:none;}
-
-  #loadingOverlay{position:absolute; inset:0; background:var(--bg); z-index:20; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; transition:opacity .5s;}
-  .spinner{width:34px; height:34px; border-radius:50%; border:3px solid var(--line); border-top-color:var(--teal); animation:spin 0.8s linear infinite;}
-  @keyframes spin{to{transform:rotate(360deg);}}
-  #loadingOverlay p{color:var(--sub); font-size:13px; font-weight:600;}
-
-  .topbar{position:absolute; top:0; right:0; left:0; z-index:5; display:flex; align-items:flex-start; justify-content:space-between; padding:16px 20px; pointer-events:none;}
-  .brand{display:flex; align-items:center; gap:10px; pointer-events:auto;}
-  .brand .dot{width:10px; height:10px; border-radius:50%; background:var(--teal); box-shadow:0 0 12px var(--teal);}
-  .brand h1{font-size:15px; font-weight:800; letter-spacing:.5px;}
-  .brand small{display:block; font-size:11px; color:var(--sub); font-weight:500; margin-top:1px;}
-
-  .modebar{display:flex; gap:8px; pointer-events:auto; align-items:center;}
-  .modebtn{background:var(--panel); border:1px solid var(--line); color:var(--sub); padding:9px 16px; border-radius:999px; font-family:'Cairo'; font-weight:700; font-size:13px; cursor:pointer; transition:.2s;}
-  .modebtn:hover{border-color:var(--teal); color:var(--text);}
-  .modebtn.active{background:var(--teal); color:#052226; border-color:var(--teal);}
-  .iconbtn{width:36px; height:36px; border-radius:50%; background:var(--panel); border:1px solid var(--line); color:var(--sub); cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center; transition:.2s;}
-  .iconbtn:hover{border-color:var(--teal); color:var(--text);}
-
-  .systembar{position:absolute; top:66px; right:20px; left:20px; z-index:5; display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; pointer-events:auto;}
-  .systembar::-webkit-scrollbar{height:4px;}
-  .syschip{flex-shrink:0; background:rgba(16,30,46,.85); backdrop-filter:blur(6px); border:1px solid var(--line); color:var(--sub); padding:7px 14px; border-radius:999px; font-family:'Cairo'; font-weight:700; font-size:12px; cursor:pointer; white-space:nowrap; transition:.15s;}
-  .syschip:hover{color:var(--text); border-color:#345267;}
-  .syschip.active{background:var(--coral); color:#2A0B08; border-color:var(--coral);}
-
-  .hint{position:absolute; bottom:16px; right:20px; left:20px; z-index:5; text-align:center; color:var(--sub); font-size:12px; font-weight:500; pointer-events:none;}
-  .hint .en{color:var(--teal); font-weight:600;}
-
-  .pill{position:absolute; transform:translate(-50%,-100%); pointer-events:auto; cursor:pointer; z-index:4; transition:opacity .2s;}
-  .pill .ring{width:13px; height:13px; border-radius:50%; border:2px solid var(--coral); background:rgba(255,104,89,.25); position:relative;}
-  .pill .ring::after{content:''; position:absolute; inset:-6px; border-radius:50%; border:1px solid var(--coral); opacity:.5; animation:pulse 2s infinite;}
-  .pill.done .ring{border-color:var(--teal); background:rgba(79,209,197,.3);}
-  .pill.done .ring::after{border-color:var(--teal);}
-  @keyframes pulse{0%{transform:scale(.6); opacity:.8;} 100%{transform:scale(1.9); opacity:0;}}
-
-  #side{background:var(--panel); border-right:1px solid var(--line); display:flex; flex-direction:column; height:100vh; overflow:hidden;}
-  .side-head{padding:18px 20px 12px; border-bottom:1px solid var(--line);}
-  .side-head-row{display:flex; align-items:center; justify-content:space-between;}
-  .side-head h2{font-size:13px; font-weight:800; color:var(--sub); letter-spacing:.3px;}
-  .reset-link{font-size:11px; color:var(--sub); background:none; border:none; cursor:pointer; text-decoration:underline; font-family:'Cairo'; font-weight:600;}
-  .reset-link:hover{color:var(--coral);}
-  .progress-row{display:flex; align-items:center; gap:8px; margin-top:9px;}
-  .progress-track{flex:1; height:5px; background:var(--line); border-radius:999px; overflow:hidden;}
-  .progress-fill{height:100%; width:0%; background:linear-gradient(90deg,var(--teal),#7CF0E4); transition:width .4s;}
-  .progress-num{font-size:11px; color:var(--sub); font-weight:600; font-family:'Inter';}
-
-  .card-wrap{padding:16px 18px; perspective:1200px;}
-  .card{height:210px; position:relative; cursor:pointer;}
-  .card-inner{position:relative; width:100%; height:100%; text-align:center; transform-style:preserve-3d; transition:transform .55s cubic-bezier(.4,.2,.2,1); border-radius:18px;}
-  .card.flipped .card-inner{transform:rotateY(180deg);}
-  .face{position:absolute; inset:0; backface-visibility:hidden; border-radius:18px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; border:1px solid var(--line);}
-  .face-front{background:linear-gradient(160deg,var(--panel2),var(--panel));}
-  .face-back{background:linear-gradient(160deg,#1B2E22,#122019); transform:rotateY(180deg); border-color:#2C4A3A;}
-
-  .empty-state{color:var(--sub); font-size:13px; line-height:1.9;}
-  .empty-state .en{display:block; color:var(--teal); font-size:19px; margin-top:8px; font-weight:700;}
-
-  .organ-tag{font-size:10.5px; color:var(--sub); font-weight:600; letter-spacing:.4px; text-transform:uppercase;}
-  .organ-en-row{display:flex; align-items:center; gap:9px; margin:8px 0 4px;}
-  .organ-en{font-size:30px; font-weight:700; color:var(--text);}
-  .speak-btn{width:30px; height:30px; border-radius:50%; border:1px solid var(--line); background:rgba(79,209,197,.08); color:var(--teal); cursor:pointer; font-size:13px; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:.15s;}
-  .speak-btn:hover{background:var(--teal); color:#052226;}
-  .organ-translit{font-size:12.5px; color:var(--gold); font-weight:600; margin-bottom:6px;}
-  .flip-hint{font-size:10.5px; color:var(--sub); margin-top:8px;}
-  .flip-hint .en{color:var(--teal);}
-  .organ-ar{font-size:25px; font-weight:800; color:#8FF0D8; margin-bottom:9px;}
-  .example{font-size:12px; line-height:1.75; color:#C9D8E0;}
-  .example-row{display:flex; align-items:center; gap:6px; justify-content:center;}
-  .example .en{color:var(--text); font-weight:500;}
-
-  .list-wrap{flex:1; overflow-y:auto; padding:0 12px 16px;}
-  .list-wrap::-webkit-scrollbar{width:6px;}
-  .list-wrap::-webkit-scrollbar-thumb{background:var(--line); border-radius:3px;}
-  .sys-label{font-size:10.5px; color:var(--sub); font-weight:800; letter-spacing:.5px; padding:12px 10px 6px; text-transform:uppercase;}
-  .organ-item{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border-radius:12px; cursor:pointer; margin-bottom:3px; border:1px solid transparent; transition:.15s;}
-  .organ-item:hover{background:var(--panel2);}
-  .organ-item.active{background:rgba(79,209,197,.1); border-color:var(--teal);}
-  .organ-item .left{display:flex; align-items:center; gap:9px;}
-  .organ-item .swatch{width:9px; height:9px; border-radius:50%; flex-shrink:0;}
-  .organ-item .name-ar{font-size:13.5px; font-weight:700;}
-  .organ-item .name-en{font-size:10.5px; color:var(--sub); display:block; margin-top:1px;}
-  .organ-item .check{font-size:13px; color:var(--teal); opacity:0; transition:.2s;}
-  .organ-item.learned .check{opacity:1;}
-
-  #quizPanel{display:none; flex:1; flex-direction:column; padding:18px; overflow-y:auto;}
-  .quiz-q{background:var(--panel2); border:1px solid var(--line); border-radius:16px; padding:20px; text-align:center;}
-  .quiz-q .lbl{font-size:10.5px; color:var(--sub); font-weight:700; letter-spacing:.4px; margin-bottom:9px;}
-  .quiz-q .ar{font-size:24px; font-weight:800; color:#8FF0D8;}
-  .quiz-choices{display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:14px;}
-  .choice-btn{background:var(--panel2); border:1px solid var(--line); color:var(--text); padding:13px 8px; border-radius:12px; font-family:'Space Grotesk'; font-weight:600; font-size:14px; cursor:pointer; transition:.15s; direction:ltr;}
-  .choice-btn:hover:not(:disabled){border-color:var(--teal);}
-  .choice-btn:disabled{cursor:default;}
-  .choice-btn.correct{background:rgba(79,209,197,.18); border-color:var(--teal); color:var(--teal);}
-  .choice-btn.wrong{background:rgba(255,104,89,.18); border-color:var(--coral); color:var(--coral);}
-  .quiz-msg{margin-top:12px; text-align:center; font-size:13px; font-weight:700; min-height:20px;}
-  .quiz-msg.ok{color:var(--teal);}
-  .quiz-msg.no{color:var(--coral);}
-  .quiz-score{margin-top:auto; padding-top:14px; text-align:center; color:var(--sub); font-size:11.5px; font-family:'Inter'; font-weight:600;}
-  .quiz-done{text-align:center; padding:26px 10px;}
-  .quiz-done .big{font-size:38px; font-weight:800; color:var(--teal); font-family:'Space Grotesk';}
-  .quiz-done .best{font-size:11.5px; color:var(--sub); margin-top:4px; font-family:'Inter';}
-  .restart-btn{margin-top:14px; background:var(--teal); color:#052226; border:none; padding:10px 22px; border-radius:999px; font-family:'Cairo'; font-weight:800; cursor:pointer;}
-
-  @media (max-width:820px){
-    #app{grid-template-columns:1fr; grid-template-rows: 48vh 1fr;}
-    #side{border-right:none; border-top:1px solid var(--line);}
-    .card{height:190px;}
-    .systembar{top:60px;}
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Medical Anatomy & English Learning Lab - 3D Explorer</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js for 3D Graphics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-cyan-500 selection:text-white">
 
-<div id="app">
-  <div id="stage">
-    <div id="loadingOverlay"><div class="spinner"></div><p>...جاري تجهيز النموذج ثلاثي الأبعاد</p></div>
-    <div class="topbar">
-      <div class="brand">
-        <span class="dot"></span>
-        <div><h1>Anatomy Lab</h1><small>تعلّم أسماء أعضاء الجسم بالإنجليزي</small></div>
-      </div>
-      <div class="modebar">
-        <button class="modebtn active" id="btnExplore">🧭 استكشاف</button>
-        <button class="modebtn" id="btnQuiz">🎯 اختبار</button>
-        <button class="iconbtn" id="btnResetView" title="إعادة ضبط الكاميرا">⟳</button>
-      </div>
-    </div>
-    <div class="systembar" id="systembar"></div>
-    <div id="pills"></div>
-    <div class="hint">اسحب لتدوير الجسم — <span class="en">scroll</span> للتقريب — دوس على أي نقطة لتتعلم اسم العضو</div>
-  </div>
-
-  <div id="side">
-    <div class="side-head">
-      <div class="side-head-row">
-        <h2>تقدّمك في التعلّم</h2>
-        <button class="reset-link" id="resetProgress">إعادة تعيين</button>
-      </div>
-      <div class="progress-row">
-        <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
-        <span class="progress-num" id="progNum">0/16</span>
-      </div>
-    </div>
-
-    <div id="explorePanel" style="display:flex; flex-direction:column; flex:1; overflow:hidden;">
-      <div class="card-wrap">
-        <div class="card" id="card">
-          <div class="card-inner" id="cardInner">
-            <div class="face face-front" id="faceFront">
-              <div class="empty-state">اختر عضوًا من النموذج ثلاثي الأبعاد<br>أو من القائمة بالأسفل
-                <span class="en">Tap an organ to begin</span>
-              </div>
+    <!-- Top Navigation Header -->
+    <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4 sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
+        <div class="flex items-center space-x-3 rtl:space-x-reverse">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                <span class="text-xl font-black text-white">3D</span>
             </div>
-            <div class="face face-back" id="faceBack"></div>
-          </div>
+            <div>
+                <h1 class="text-xl font-black tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">Interactive Medical Anatomy Lab</h1>
+                <p class="text-xs text-slate-400">Master Medical English & 3D Human Anatomy simultaneously</p>
+            </div>
         </div>
-      </div>
-      <div class="list-wrap" id="listWrap"></div>
-    </div>
 
-    <div id="quizPanel"></div>
-  </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
-/* ---------------- TTS ---------------- */
-function speak(text){
-  if(!('speechSynthesis' in window)) return;
-  try{
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-US'; u.rate = 0.88; u.pitch = 1;
-    speechSynthesis.speak(u);
-  }catch(e){}
-}
-
-/* ---------------- PERSISTENCE ---------------- */
-const STORAGE_KEY = 'anatomyLab_v2';
-function loadProgress(){
-  try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw) return {learned:[], bestScore:0};
-    return JSON.parse(raw);
-  }catch(e){ return {learned:[], bestScore:0}; }
-}
-function saveProgress(){
-  try{
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({learned:[...learned], bestScore}));
-  }catch(e){}
-}
-let bestScore = 0;
-
-/* ---------------- SYSTEMS ---------------- */
-const SYSTEMS = [
-  {id:'all', ar:'الكل', en:'All'},
-  {id:'nervous', ar:'الجهاز العصبي', en:'Nervous'},
-  {id:'sensory', ar:'الحواس', en:'Senses'},
-  {id:'respiratory', ar:'الجهاز التنفسي', en:'Respiratory'},
-  {id:'circulatory', ar:'الجهاز الدوري', en:'Circulatory'},
-  {id:'digestive', ar:'الجهاز الهضمي', en:'Digestive'},
-  {id:'urinary', ar:'الجهاز البولي', en:'Urinary'},
-  {id:'skeletal', ar:'الهيكل العظمي', en:'Skeletal'},
-  {id:'muscular', ar:'الجهاز العضلي', en:'Muscular'},
-];
-let activeSystem = 'all';
-
-/* ---------------- DATA ---------------- */
-const ORGANS = [
-  {id:'brain', en:'Brain', ar:'الدماغ', tr:'بْرِيْن', color:0xF2A6A6, system:'nervous',
-   ex_en:'The brain controls your whole body.', ex_ar:'الدماغ يتحكّم في جسمك بالكامل.',
-   pos:[0,1.62,0.03], size:0.15, geo:'sphere'},
-  {id:'skull', en:'Skull', ar:'الجمجمة', tr:'سْكَل', color:0xE7E2D2, system:'skeletal',
-   ex_en:'The skull protects the brain.', ex_ar:'الجمجمة تحمي الدماغ.',
-   pos:[0,1.62,0], size:0.25, geo:'wiresphere'},
-  {id:'eyes', en:'Eyes', ar:'العينان', tr:'آيْز', color:0x6FB4E8, system:'sensory', mirror:true,
-   ex_en:'We see with our eyes.', ex_ar:'نبصر بواسطة عينينا.',
-   pos:[0.08,1.645,0.185], size:0.032, geo:'sphere'},
-  {id:'trachea', en:'Trachea', ar:'القصبة الهوائية', tr:'تْرِيْكِيا', color:0xD8C9B8, system:'respiratory',
-   ex_en:'Air travels through the trachea.', ex_ar:'يمرّ الهواء عبر القصبة الهوائية.',
-   pos:[0,1.44,0.06], size:0.032, height:0.16, geo:'cyl'},
-  {id:'heart', en:'Heart', ar:'القلب', tr:'هَارْت', color:0xE84C4C, system:'circulatory',
-   ex_en:'My heart beats faster when I run.', ex_ar:'قلبي يخفق أسرع عندما أجري.',
-   pos:[-0.09,1.10,0.14], size:0.11, geo:'icosahedron'},
-  {id:'lungs', en:'Lungs', ar:'الرئتان', tr:'لَنْغْز', color:0xF29AAE, system:'respiratory', mirror:true,
-   ex_en:'We breathe with our lungs.', ex_ar:'نتنفّس بواسطة رئتينا.',
-   pos:[0.13,1.13,0.10], size:0.12, geo:'sphere'},
-  {id:'ribcage', en:'Ribcage', ar:'القفص الصدري', tr:'رِبْكِيج', color:0xEFE7D4, system:'skeletal',
-   ex_en:'The ribcage protects the heart and lungs.', ex_ar:'القفص الصدري يحمي القلب والرئتين.',
-   pos:[0,1.10,0], size:0.34, geo:'wiresphere'},
-  {id:'liver', en:'Liver', ar:'الكبد', tr:'لِيْفَر', color:0x8B4A3D, system:'digestive',
-   ex_en:'The liver cleans your blood.', ex_ar:'الكبد ينقّي دمك.',
-   pos:[0.15,0.90,0.12], size:0.13, geo:'box'},
-  {id:'stomach', en:'Stomach', ar:'المعدة', tr:'سْتَمَك', color:0xC77DBB, system:'digestive',
-   ex_en:'I ate too much and my stomach hurts.', ex_ar:'أكلت كثيرًا ومعدتي تؤلمني.',
-   pos:[-0.11,0.87,0.13], size:0.115, geo:'sphere'},
-  {id:'pancreas', en:'Pancreas', ar:'البنكرياس', tr:'بَانْكْرِياس', color:0xE0B060, system:'digestive',
-   ex_en:'The pancreas helps digest food.', ex_ar:'البنكرياس يساعد على هضم الطعام.',
-   pos:[0.02,0.83,-0.03], size:0.09, geo:'box'},
-  {id:'kidneys', en:'Kidneys', ar:'الكليتان', tr:'كِدْنِيز', color:0x7A3B3B, system:'urinary', mirror:true,
-   ex_en:'Kidneys filter waste from the blood.', ex_ar:'الكليتان تصفّيان الفضلات من الدم.',
-   pos:[0.16,0.80,-0.11], size:0.07, geo:'sphere'},
-  {id:'bladder', en:'Bladder', ar:'المثانة', tr:'بْلادَر', color:0xE0C840, system:'urinary',
-   ex_en:'The bladder stores urine.', ex_ar:'المثانة تخزّن البول.',
-   pos:[0,0.56,0.10], size:0.06, geo:'sphere'},
-  {id:'intestines', en:'Intestines', ar:'الأمعاء', tr:'إِنْتِسْتِنْز', color:0xD98E5C, system:'digestive',
-   ex_en:'Food moves slowly through the intestines.', ex_ar:'يتحرّك الطعام ببطء عبر الأمعاء.',
-   pos:[0,0.65,0.11], size:0.16, geo:'torusknot'},
-  {id:'spine', en:'Spine', ar:'العمود الفقري', tr:'سْبَايْن', color:0xE8E0C8, system:'skeletal',
-   ex_en:'The spine supports your back.', ex_ar:'العمود الفقري يدعم ظهرك.',
-   pos:[0,0.95,-0.17], size:0.02, height:1.0, geo:'cyl'},
-  {id:'femur', en:'Femur', ar:'عظمة الفخذ', tr:'فِيمَر', color:0xF3EEDA, system:'skeletal',
-   ex_en:'The femur is the longest bone in the body.', ex_ar:'عظمة الفخذ أطول عظمة في الجسم.',
-   pos:[0.15,-0.05,0], size:0.035, height:0.62, geo:'cyl'},
-  {id:'bicep', en:'Bicep', ar:'العضلة ذات الرأسين', tr:'بَايْسَبْ', color:0xC0453B, system:'muscular',
-   ex_en:'He flexed his bicep muscle.', ex_ar:'قام بشدّ عضلة الذراع.',
-   pos:[-0.395,1.18,0.02], size:0.085, geo:'sphere', squash:[0.85,1.9,0.85]},
-];
-const byId = Object.fromEntries(ORGANS.map(o=>[o.id,o]));
-const saved = loadProgress();
-let learned = new Set(saved.learned || []);
-bestScore = saved.bestScore || 0;
-
-/* ---------------- THREE SETUP ---------------- */
-const stage = document.getElementById('stage');
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(38, stage.clientWidth/stage.clientHeight, 0.1, 100);
-
-const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.setSize(stage.clientWidth, stage.clientHeight);
-stage.appendChild(renderer.domElement);
-
-const DEFAULT_CAM = {radius:2.55, theta:0.35, phi:1.25};
-const target = new THREE.Vector3(0,1.0,0);
-let camState = {...DEFAULT_CAM};
-let dragging=false, lastX=0, lastY=0, idleTimer=null, userActive=false;
-function applyCam(){
-  const {radius,theta,phi} = camState;
-  camera.position.set(
-    target.x + radius*Math.sin(phi)*Math.sin(theta),
-    target.y + radius*Math.cos(phi),
-    target.z + radius*Math.sin(phi)*Math.cos(theta)
-  );
-  camera.lookAt(target);
-}
-applyCam();
-const dom = renderer.domElement;
-let downPos = null;
-dom.addEventListener('pointerdown', e=>{ dragging=true; lastX=e.clientX; lastY=e.clientY; userActive=true; clearTimeout(idleTimer); dom.setPointerCapture(e.pointerId); downPos=[e.clientX,e.clientY]; });
-dom.addEventListener('pointermove', e=>{
-  if(!dragging) return;
-  const dx=e.clientX-lastX, dy=e.clientY-lastY; lastX=e.clientX; lastY=e.clientY;
-  camState.theta -= dx*0.006;
-  camState.phi = Math.min(Math.max(camState.phi - dy*0.006, 0.35), Math.PI-0.35);
-  applyCam();
-});
-function endDrag(e){
-  dragging=false; idleTimer=setTimeout(()=>userActive=false, 3000);
-  if(!downPos) return;
-  const moved = Math.hypot(e.clientX-downPos[0], e.clientY-downPos[1]);
-  if(moved<=6) handlePick(e);
-}
-dom.addEventListener('pointerup', endDrag);
-dom.addEventListener('pointercancel', ()=>{dragging=false;});
-dom.addEventListener('wheel', e=>{
-  e.preventDefault();
-  camState.radius = Math.min(Math.max(camState.radius + e.deltaY*0.0025, 1.3), 4.6);
-  applyCam();
-}, {passive:false});
-document.getElementById('btnResetView').addEventListener('click', ()=>{
-  camState = {...DEFAULT_CAM}; userActive=false; applyCam();
-});
-
-scene.add(new THREE.AmbientLight(0x6f8ba8, 0.9));
-const key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(2,3,2); scene.add(key);
-const rim = new THREE.DirectionalLight(0x4fd1c5, 0.5); rim.position.set(-2,1,-2); scene.add(rim);
-
-const bodyGroup = new THREE.Group();
-scene.add(bodyGroup);
-
-const skinMat = new THREE.MeshPhongMaterial({color:0xE8C4A0, transparent:true, opacity:0.13, depthWrite:false, side:THREE.DoubleSide, shininess:20});
-function addSkin(geo,pos,rot,scale){
-  const m = new THREE.Mesh(geo, skinMat);
-  m.position.set(...pos);
-  if(rot) m.rotation.set(...rot);
-  if(scale) m.scale.set(...scale);
-  bodyGroup.add(m);
-}
-addSkin(new THREE.SphereGeometry(0.22,24,24), [0,1.62,0]);
-addSkin(new THREE.CylinderGeometry(0.08,0.09,0.12,16), [0,1.46,0]);
-addSkin(new THREE.CylinderGeometry(0.30,0.36,0.78,24), [0,1.05,0]);
-addSkin(new THREE.SphereGeometry(0.26,20,20), [0,0.63,0], null, [1,0.65,0.8]);
-[-1,1].forEach(s=>{
-  addSkin(new THREE.CylinderGeometry(0.055,0.07,0.85,14), [s*0.40,1.05,0], [0,0,s*0.22]);
-  addSkin(new THREE.CylinderGeometry(0.09,0.11,0.95,14), [s*0.15,-0.02,0]);
-});
-
-/* soft ground shadow (fake) */
-const groundGeo = new THREE.CircleGeometry(0.65,32);
-const groundMat = new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.35});
-const ground = new THREE.Mesh(groundGeo, groundMat);
-ground.rotation.x = -Math.PI/2;
-ground.position.y = -0.52;
-scene.add(ground);
-
-/* organ meshes + markers */
-const organMeshes = {};
-const markers = [];
-function makeGeo(o){
-  switch(o.geo){
-    case 'sphere': return new THREE.SphereGeometry(o.size,20,20);
-    case 'wiresphere': return new THREE.SphereGeometry(o.size,14,10);
-    case 'icosahedron': return new THREE.IcosahedronGeometry(o.size,1);
-    case 'box': return new THREE.BoxGeometry(o.size*1.3,o.size*0.9,o.size*0.9);
-    case 'torusknot': return new THREE.TorusKnotGeometry(o.size*0.55,o.size*0.17,64,8);
-    case 'cyl': return new THREE.CylinderGeometry(o.size,o.size,o.height||0.2,12);
-    default: return new THREE.SphereGeometry(o.size,16,16);
-  }
-}
-function makeMat(o){
-  if(o.geo==='wiresphere') return new THREE.MeshBasicMaterial({color:o.color, wireframe:true, transparent:true, opacity:0.35});
-  return new THREE.MeshPhongMaterial({color:o.color, shininess:60});
-}
-ORGANS.forEach(o=>{
-  const mat = makeMat(o);
-  const positions = o.mirror ? [[o.pos[0],o.pos[1],o.pos[2]], [-o.pos[0],o.pos[1],o.pos[2]]] : [o.pos];
-  organMeshes[o.id] = [];
-  positions.forEach(p=>{
-    const mesh = new THREE.Mesh(makeGeo(o), mat.clone ? mat.clone() : mat);
-    mesh.position.set(...p);
-    if(o.squash) mesh.scale.set(...o.squash);
-    bodyGroup.add(mesh);
-    organMeshes[o.id].push(mesh);
-  });
-  addMarker(organMeshes[o.id][0], o, [o.size*1.3+0.03, (o.height? o.height/2:o.size*0.7), o.size*0.6]);
-});
-function addMarker(mesh, organ, localOffset){ markers.push({mesh, organ, offset: localOffset || [0,0.1,0]}); }
-
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-function handlePick(e){
-  const rect = dom.getBoundingClientRect();
-  mouse.x = ((e.clientX-rect.left)/rect.width)*2-1;
-  mouse.y = -((e.clientY-rect.top)/rect.height)*2+1;
-  raycaster.setFromCamera(mouse, camera);
-  const all = Object.values(organMeshes).flat().filter(m=>m.visible);
-  const hits = raycaster.intersectObjects(all);
-  if(hits.length){
-    const hitMesh = hits[0].object;
-    const found = ORGANS.find(o => organMeshes[o.id].includes(hitMesh));
-    if(found) selectOrgan(found.id);
-  }
-}
-
-let firstFrame = true;
-function animate(){
-  requestAnimationFrame(animate);
-  if(!userActive){ camState.theta += 0.0018; applyCam(); }
-  updatePills();
-  renderer.render(scene,camera);
-  if(firstFrame){
-    firstFrame=false;
-    const ov = document.getElementById('loadingOverlay');
-    ov.style.opacity='0';
-    setTimeout(()=>ov.style.display='none', 500);
-  }
-}
-animate();
-
-window.addEventListener('resize', ()=>{
-  camera.aspect = stage.clientWidth/stage.clientHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(stage.clientWidth, stage.clientHeight);
-});
-
-/* ---------------- SYSTEM FILTER ---------------- */
-const systembar = document.getElementById('systembar');
-SYSTEMS.forEach(s=>{
-  const chip = document.createElement('div');
-  chip.className = 'syschip'+(s.id==='all'?' active':'');
-  chip.id = 'sys-'+s.id;
-  chip.innerHTML = s.ar;
-  chip.addEventListener('click', ()=> setSystem(s.id));
-  systembar.appendChild(chip);
-});
-function setSystem(id){
-  activeSystem = id;
-  document.querySelectorAll('.syschip').forEach(c=>c.classList.remove('active'));
-  document.getElementById('sys-'+id).classList.add('active');
-  ORGANS.forEach(o=>{
-    const show = (id==='all') || (o.system===id);
-    organMeshes[o.id].forEach(m=> m.visible = show);
-    if(pillEls[o.id]) pillEls[o.id].style.display = show ? '' : 'none';
-  });
-  skinMat.opacity = (id==='all') ? 0.13 : 0.07;
-  renderList();
-}
-
-/* ---------------- PILLS ---------------- */
-const pillsWrap = document.getElementById('pills');
-const pillEls = {};
-markers.forEach(m=>{
-  const el = document.createElement('div');
-  el.className='pill';
-  el.innerHTML = '<span class="ring"></span>';
-  el.title = m.organ.en;
-  el.addEventListener('click', ()=> selectOrgan(m.organ.id));
-  pillsWrap.appendChild(el);
-  pillEls[m.organ.id] = el;
-});
-const tmpV = new THREE.Vector3();
-function updatePills(){
-  markers.forEach(m=>{
-    if(!m.mesh.visible) return;
-    tmpV.copy(m.mesh.position).add(new THREE.Vector3(...m.offset));
-    tmpV.applyMatrix4(bodyGroup.matrixWorld);
-    const projected = tmpV.clone().project(camera);
-    const behind = projected.z > 1;
-    const x = (projected.x*0.5+0.5) * stage.clientWidth;
-    const y = (1-(projected.y*0.5+0.5)) * stage.clientHeight;
-    const el = pillEls[m.organ.id];
-    el.style.left = x+'px';
-    el.style.top = y+'px';
-    el.style.opacity = behind ? '0' : '1';
-    el.style.pointerEvents = behind ? 'none' : 'auto';
-    el.classList.toggle('done', learned.has(m.organ.id));
-  });
-}
-
-/* ---------------- SIDEBAR LIST ---------------- */
-const listWrap = document.getElementById('listWrap');
-function renderList(){
-  listWrap.innerHTML = '';
-  const groups = activeSystem==='all' ? SYSTEMS.filter(s=>s.id!=='all') : SYSTEMS.filter(s=>s.id===activeSystem);
-  groups.forEach(g=>{
-    const items = ORGANS.filter(o=>o.system===g.id);
-    if(!items.length) return;
-    const label = document.createElement('div');
-    label.className='sys-label';
-    label.textContent = g.ar;
-    listWrap.appendChild(label);
-    items.forEach(o=>{
-      const item = document.createElement('div');
-      item.className='organ-item'+(learned.has(o.id)?' learned':'');
-      item.id = 'item-'+o.id;
-      item.innerHTML = `
-        <div class="left">
-          <span class="swatch" style="background:#${o.color.toString(16).padStart(6,'0')}"></span>
-          <div><div class="name-ar">${o.ar}</div><span class="name-en en">${o.en}</span></div>
+        <!-- Global Controls -->
+        <div class="flex items-center gap-3">
+            <button id="langToggle" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-cyan-300 text-xs px-4 py-2 rounded-xl transition font-semibold shadow flex items-center gap-2">
+                <span>🌐 Toggle Arabic Translation</span>
+            </button>
+            <button id="resetCameraBtn" class="bg-cyan-600 hover:bg-cyan-500 text-white text-xs px-4 py-2 rounded-xl transition font-semibold shadow-lg shadow-cyan-600/30">
+                Reset View
+            </button>
         </div>
-        <span class="check">✓</span>`;
-      item.addEventListener('click', ()=> selectOrgan(o.id));
-      listWrap.appendChild(item);
-    });
-  });
-}
-renderList();
+    </header>
 
-/* ---------------- FLASHCARD ---------------- */
-const card = document.getElementById('card');
-const faceFront = document.getElementById('faceFront');
-const faceBack = document.getElementById('faceBack');
-let currentOrgan = null;
-function selectOrgan(id){
-  if(!byId[id]) return;
-  currentOrgan = byId[id];
-  learned.add(id);
-  updateProgress();
-  saveProgress();
-  card.classList.remove('flipped');
-  faceFront.innerHTML = `
-    <div class="organ-tag">اضغط على البطاقة لترى الترجمة</div>
-    <div class="organ-en-row">
-      <div class="organ-en en">${currentOrgan.en}</div>
-      <button class="speak-btn" id="speakWord" title="استمع للنطق">🔊</button>
-    </div>
-    <div class="organ-translit">${currentOrgan.tr}</div>
-    <div class="flip-hint">اقلب البطاقة <span class="en">flip →</span></div>`;
-  faceBack.innerHTML = `
-    <div class="organ-tag">Arabic</div>
-    <div class="organ-ar">${currentOrgan.ar}</div>
-    <div class="example-row">
-      <button class="speak-btn" id="speakEx" title="استمع للجملة">🔊</button>
-      <div class="example"><span class="en">${currentOrgan.ex_en}</span></div>
-    </div>
-    <div class="example" style="margin-top:6px;">${currentOrgan.ex_ar}</div>`;
-  document.getElementById('speakWord').addEventListener('click', ev=>{ ev.stopPropagation(); speak(currentOrgan.en); });
-  document.getElementById('speakEx').addEventListener('click', ev=>{ ev.stopPropagation(); speak(currentOrgan.ex_en); });
-  document.querySelectorAll('.organ-item').forEach(el=>el.classList.remove('active'));
-  const it = document.getElementById('item-'+id);
-  if(it){ it.classList.add('active'); it.classList.add('learned'); it.scrollIntoView({block:'nearest', behavior:'smooth'}); }
-}
-card.addEventListener('click', ()=>{ if(currentOrgan) card.classList.toggle('flipped'); });
-function updateProgress(){
-  document.getElementById('progNum').textContent = learned.size+'/'+ORGANS.length;
-  document.getElementById('progFill').style.width = (learned.size/ORGANS.length*100)+'%';
-}
-updateProgress();
-document.getElementById('resetProgress').addEventListener('click', ()=>{
-  if(!confirm('تصفير كل التقدّم المحفوظ؟')) return;
-  learned = new Set(); bestScore = 0; saveProgress(); updateProgress(); renderList();
-  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('done'));
-});
+    <!-- Main Workspace Grid -->
+    <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 max-w-[1600px] mx-auto w-full">
+        
+        <!-- Left Sidebar: Organ Systems Selection -->
+        <aside class="lg:col-span-3 bg-slate-900/80 backdrop-blur rounded-2xl border border-slate-800 p-5 flex flex-col gap-6 shadow-2xl">
+            <div>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Anatomical Systems</h2>
+                <div class="space-y-2">
+                    <button onclick="switchSystem('brain')" id="sys-btn-brain" class="system-btn w-full text-left px-4 py-3 rounded-xl bg-cyan-600 text-white font-medium text-sm flex items-center justify-between transition shadow-md">
+                        <span>🧠 Central Nervous (Brain)</span>
+                        <span class="text-xs bg-cyan-900/60 px-2 py-0.5 rounded-md">4 Parts</span>
+                    </button>
+                    <button onclick="switchSystem('heart')" id="sys-btn-heart" class="system-btn w-full text-left px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700/80 text-slate-300 font-medium text-sm flex items-center justify-between transition border border-slate-700/50">
+                        <span>❤️ Cardiovascular (Heart)</span>
+                        <span class="text-xs bg-slate-700 px-2 py-0.5 rounded-md">4 Parts</span>
+                    </button>
+                    <button onclick="switchSystem('skeleton')" id="sys-btn-skeleton" class="system-btn w-full text-left px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700/80 text-slate-300 font-medium text-sm flex items-center justify-between transition border border-slate-700/50">
+                        <span>💀 Skeletal System</span>
+                        <span class="text-xs bg-slate-700 px-2 py-0.5 rounded-md">4 Parts</span>
+                    </button>
+                    <button onclick="switchSystem('muscular')" id="sys-btn-muscular" class="system-btn w-full text-left px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700/80 text-slate-300 font-medium text-sm flex items-center justify-between transition border border-slate-700/50">
+                        <span>💪 Muscular System</span>
+                        <span class="text-xs bg-slate-700 px-2 py-0.5 rounded-md">4 Parts</span>
+                    </button>
+                </div>
+            </div>
 
-/* ---------------- MODE SWITCH ---------------- */
-const btnExplore = document.getElementById('btnExplore');
-const btnQuiz = document.getElementById('btnQuiz');
-const explorePanel = document.getElementById('explorePanel');
-const quizPanel = document.getElementById('quizPanel');
-btnExplore.addEventListener('click', ()=>{
-  btnExplore.classList.add('active'); btnQuiz.classList.remove('active');
-  explorePanel.style.display='flex'; quizPanel.style.display='none';
-});
-btnQuiz.addEventListener('click', ()=>{
-  btnQuiz.classList.add('active'); btnExplore.classList.remove('active');
-  explorePanel.style.display='none'; quizPanel.style.display='flex';
-  startQuiz();
-});
+            <!-- Specific Parts Selector for Active System -->
+            <div class="flex-1 flex flex-col">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Anatomical Structures</h2>
+                <div id="subPartsList" class="space-y-2 overflow-y-auto max-h-[300px] pr-1">
+                    <!-- Dynamically populated via JavaScript -->
+                </div>
+            </div>
 
-/* ---------------- QUIZ ---------------- */
-let quizOrder = [], quizIdx = 0, quizScore = 0, quizTotal = 0, answered=false;
-function shuffle(arr){ return arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]); }
-function startQuiz(){
-  const pool = (activeSystem==='all') ? ORGANS.map(o=>o.id) : ORGANS.filter(o=>o.system===activeSystem).map(o=>o.id);
-  quizOrder = shuffle(pool);
-  quizTotal = quizOrder.length;
-  quizIdx = 0; quizScore = 0;
-  renderQuizShell();
-  nextQuizQuestion();
-}
-function renderQuizShell(){
-  quizPanel.innerHTML = `
-    <div class="quiz-q">
-      <div class="lbl">ابحث عن هذا العضو، أو اختر اسمه بالإنجليزي</div>
-      <div class="ar" id="quizAr">—</div>
-      <div class="quiz-choices" id="quizChoices"></div>
-    </div>
-    <div class="quiz-msg" id="quizMsg"></div>
-    <div class="quiz-score" id="quizScore"></div>`;
-}
-function nextQuizQuestion(){
-  answered = false;
-  const msg = document.getElementById('quizMsg');
-  if(msg){ msg.textContent=''; msg.className='quiz-msg'; }
-  if(quizIdx >= quizOrder.length){
-    if(quizScore > bestScore){ bestScore = quizScore; saveProgress(); }
-    quizPanel.innerHTML = `
-      <div class="quiz-done">
-        <div>انتهى الاختبار 🎉</div>
-        <div class="big">${quizScore}/${quizTotal}</div>
-        <div class="best">أفضل نتيجة محفوظة: ${bestScore}</div>
-        <button class="restart-btn" id="restartBtn">إعادة المحاولة</button>
-      </div>`;
-    document.getElementById('restartBtn').addEventListener('click', startQuiz);
-    return;
-  }
-  const o = byId[quizOrder[quizIdx]];
-  quizPanel._answer = o.id;
-  document.getElementById('quizAr').innerHTML = `${o.ar} <span class="en" style="display:block; font-size:13px; color:var(--sub); margin-top:6px;">find: ${o.en}</span>`;
-  document.getElementById('quizScore').textContent = `السؤال ${quizIdx+1} من ${quizTotal} — النتيجة: ${quizScore}`;
-  const distractors = shuffle(ORGANS.filter(x=>x.id!==o.id)).slice(0,3).map(x=>x.en);
-  const choices = shuffle([o.en, ...distractors]);
-  const choicesWrap = document.getElementById('quizChoices');
-  choicesWrap.innerHTML = '';
-  choices.forEach(label=>{
-    const btn = document.createElement('button');
-    btn.className='choice-btn'; btn.textContent = label;
-    btn.addEventListener('click', ()=> checkQuizAnswer(label===o.en ? o.id : ORGANS.find(x=>x.en===label).id, btn));
-    choicesWrap.appendChild(btn);
-  });
-}
-function checkQuizAnswer(id, btnEl){
-  if(answered || !quizPanel._answer) return;
-  answered = true;
-  const correctId = quizPanel._answer;
-  const correct = id === correctId;
-  document.querySelectorAll('.choice-btn').forEach(b=>{
-    b.disabled = true;
-    if(b.textContent === byId[correctId].en) b.classList.add('correct');
-    else if(b===btnEl && !correct) b.classList.add('wrong');
-  });
-  const msg = document.getElementById('quizMsg');
-  msg.textContent = correct ? '✓ صحيح! أحسنت' : `✗ خطأ — الصحيح كان ${byId[correctId].en}`;
-  msg.classList.add(correct ? 'ok':'no');
-  speak(byId[correctId].en);
-  if(correct) quizScore++;
-  learned.add(correctId); updateProgress(); saveProgress(); renderList();
-  quizPanel._answer = null;
-  setTimeout(()=>{ quizIdx++; nextQuizQuestion(); }, 1300);
-}
-/* clicking the organ in 3D also answers the current quiz question */
-const origSelect = selectOrgan;
-selectOrgan = function(id){
-  origSelect(id);
-  if(quizPanel.style.display==='flex' && quizPanel._answer && !answered) checkQuizAnswer(id, null);
-};
-</script>
+            <!-- Quick Study Tip Card -->
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-4 rounded-xl border border-slate-700/80 text-xs text-slate-300 space-y-1">
+                <p class="font-bold text-cyan-400 flex items-center gap-1">💡 Language Pro-Tip</p>
+                <p>Click the speaker icon next to any term to hear authentic US pronunciation and repeat aloud to master medical nomenclature.</p>
+            </div>
+        </aside>
+
+        <!-- Center Section: 3D Interactive Canvas Area -->
+        <section class="lg:col-span-6 bg-slate-900/80 backdrop-blur rounded-2xl border border-slate-800 overflow-hidden relative flex flex-col shadow-2xl">
+            <!-- Canvas Overlay Badge -->
+            <div class="absolute top-4 left-4 z-10 bg-slate-950/80 backdrop-blur border border-slate-800 px-3.5 py-2 rounded-xl text-xs text-cyan-300 flex items-center gap-2 shadow-lg">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>3D Viewport (Click & Drag to Rotate Model)</span>
+            </div>
+
+            <!-- Three.js Canvas Container -->
+            <div id="canvas-container" class="w-full h-[450px] lg:h-[650px] cursor-grab active:cursor-grabbing"></div>
+
+            <!-- Viewport Controls Bar -->
+            <div class="p-4 bg-slate-950/60 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2 text-xs text-slate-400">
+                    <span>Rotation: <strong id="rotStatus" class="text-cyan-400">Active</strong></span>
+                    <span>•</span>
+                    <span>Zoom: <strong class="text-cyan-400">Enabled</strong></span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="toggleAutoRotate()" id="autoRotateBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-1.5 rounded-lg border border-slate-700 transition font-medium">
+                        Pause Rotation
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Sidebar: Comprehensive Information & Bilingual Content -->
+        <aside class="lg:col-span-3 bg-slate-900/80 backdrop-blur rounded-2xl border border-slate-800 p-6 flex flex-col justify-between shadow-2xl">
+            <div class="space-y-6">
+                <!-- Header of Info Panel -->
+                <div>
+                    <div class="flex justify-between items-start">
+                        <span id="partCategory" class="text-[10px] uppercase tracking-widest bg-cyan-950 text-cyan-400 border border-cyan-800/60 px-2.5 py-1 rounded-md font-bold">Central Nervous System</span>
+                        <button id="audioBtn" class="bg-slate-800 hover:bg-cyan-600 hover:text-white p-2.5 rounded-xl border border-slate-700 transition text-cyan-300 shadow-md flex items-center justify-center" title="Pronounce Term">
+                            🔊
+                        </button>
+                    </div>
+                    <h2 id="partTitle" class="text-2xl font-black text-white mt-3 tracking-tight">Frontal Lobe</h2>
+                    <p id="partLatin" class="text-xs italic text-slate-400 mt-0.5">Lobus frontalis</p>
+                </div>
+
+                <!-- English Explanation Box -->
+                <div class="space-y-4 text-sm">
+                    <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">English Description</h3>
+                            <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">C1 Level</span>
+                        </div>
+                        <p id="descEn" class="text-slate-200 leading-relaxed text-xs lg:text-sm">
+                            The frontal lobe is located at the front of the brain and is associated with reasoning, motor control, emotion, and language (Broca's area). It is crucial for high-level executive functions and decision-making processes.
+                        </p>
+                    </div>
+
+                    <!-- Arabic Translation Box -->
+                    <div id="arTranslationBox" class="bg-cyan-950/30 p-4 rounded-xl border border-cyan-900/50 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-[11px] font-bold text-cyan-400 uppercase tracking-wider">الترجمة العربية الدقيقة</h3>
+                            <span class="text-[10px] bg-cyan-950 text-cyan-300 border border-cyan-800 px-2 py-0.5 rounded">مترجم</span>
+                        </div>
+                        <p id="descAr" class="text-cyan-100 leading-relaxed text-xs lg:text-sm">
+                            الفص الجبهي يقع في مقدمة الدماغ ويرتبط بالتفكير المنطقي، والتحكم الحركي، والمشاعر، واللغة. وهو أساسي للوظائف الإدراكية العليا وعمليات اتخاذ القرار.
+                        </p>
+                    </div>
+
+                    <!-- Medical Vocabulary Focus List -->
+                    <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Key Vocabulary</h3>
+                        <ul id="vocabList" class="space-y-1.5 text-xs text-slate-300">
+                            <li class="flex justify-between items-center bg-slate-900 p-1.5 rounded border border-slate-800">
+                                <span class="font-semibold text-cyan-300">Reasoning</span>
+                                <span class="text-slate-400">التفكير المنطقي</span>
+                            </li>
+                            <li class="flex justify-between items-center bg-slate-900 p-1.5 rounded border border-slate-800">
+                                <span class="font-semibold text-cyan-300">Motor Control</span>
+                                <span class="text-slate-400">التحكم الحركي</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Badge inside panel -->
+            <div class="pt-4 border-t border-slate-800 text-center text-xs text-slate-500">
+                <span>Interactive Learning Engine v3.4</span>
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- Comprehensive JavaScript Application Logic -->
+    <script>
+        // Database containing anatomical systems, 3D color themes, English explanations, Arabic translations, and targeted medical vocabulary.
+        const anatomicalDatabase = {
+            brain: {
+                name: "Central Nervous System (Brain)",
+                parts: {
+                    frontal: {
+                        category: "Forebrain / Cortex",
+                        title: "Frontal Lobe",
+                        latin: "Lobus frontalis",
+                        color: 0x38bdf8,
+                        descEn: "The frontal lobe is located at the front of the brain and is associated with reasoning, motor control, emotion, and language (Broca's area). It is crucial for high-level executive functions and decision-making processes.",
+                        descAr: "الفص الجبهي يقع في مقدمة الدماغ ويرتبط بالتفكير المنطقي، والتحكم الحركي، والمشاعر، واللغة. وهو أساسي للوظائف الإدراكية العليا وعمليات اتخاذ القرار.",
+                        vocab: [
+                            { en: "Reasoning", ar: "التفكير المنطقي" },
+                            { en: "Motor Control", ar: "التحكم الحركي" },
+                            { en: "Executive Functions", ar: "الوظائف التنفيذية" }
+                        ]
+                    },
+                    parietal: {
+                        category: "Cortex / Sensory Area",
+                        title: "Parietal Lobe",
+                        latin: "Lobus parietalis",
+                        color: 0x818cf8,
+                        descEn: "The parietal lobe processes sensory information regarding taste, temperature, and touch. It contains the somatosensory cortex which handles bodily sensations and spatial orientation.",
+                        descAr: "الفص الجداري يعالج المعلومات الحسية المتعلقة بالتذوق، ودرجة الحرارة، واللمس، ويحتوي على القشرة الحسية الجسدية المسؤولة عن الإحساس والتوجه المكاني.",
+                        vocab: [
+                            { en: "Sensory Information", ar: "معلومات حسية" },
+                            { en: "Temperature", ar: "درجة الحرارة" },
+                            { en: "Spatial Orientation", ar: "التوجه المكاني" }
+                        ]
+                    },
+                    temporal: {
+                        category: "Cortex / Auditory Center",
+                        title: "Temporal Lobe",
+                        latin: "Lobus temporalis",
+                        color: 0xc084fc,
+                        descEn: "Located near the temples, this lobe is responsible for processing auditory information, memory integration, and speech comprehension via Wernicke's area.",
+                        descAr: "يقع قرب الصدغين، وهو مسؤول عن معالجة المعلومات السمعية، دمج الذاكرة، وفهم الكلام عبر منطقة فيرنيك.",
+                        vocab: [
+                            { en: "Auditory Information", ar: "معلومات سمعية" },
+                            { en: "Memory Integration", ar: "دمج الذاكرة" },
+                            { en: "Speech Comprehension", ar: "فهم الكلام" }
+                        ]
+                    },
+                    cerebellum: {
+                        category: "Hindbrain / Coordination",
+                        title: "Cerebellum",
+                        latin: "Cerebellum",
+                        color: 0xf472b6,
+                        descEn: "Often referred to as the 'little brain', the cerebellum regulates and coordinates voluntary muscle movements, posture, and core balance based on sensory inputs.",
+                        descAr: "يُعرف غالباً بـ 'الدماغ الصغير'، وينظم ويسق الحركات العضلية الإرادية، وضعية الجسم، والتوازن العام بناءً على المدخلات الحسية.",
+                        vocab: [
+                            { en: "Voluntary Movements", ar: "حركات إرادية" },
+                            { en: "Posture", ar: "وضعية الجسم" },
+                            { en: "Balance", ar: "التوازن" }
+                        ]
+                    }
+                }
+            },
+            heart: {
+                name: "Cardiovascular System (Heart)",
+                parts: {
+                    rightAtrium: {
+                        category: "Cardiovascular / Chambers",
+                        title: "Right Atrium",
+                        latin: "Atrium dextrum",
+                        color: 0xef4444,
+                        descEn: "The right atrium receives deoxygenated blood from the body through the superior and inferior vena cava and pumps it into the right ventricle.",
+                        descAr: "الأذين الأيمن يستقبل الدم غير المحمل بالأكسجين من الجسم عبر الوريد الاجوف العلوي والسفل ويضخه إلى البطين الأيمن.",
+                        vocab: [
+                            { en: "Deoxygenated Blood", ar: "دم غير محمل بالأكسجين" },
+                            { en: "Vena Cava", ar: "الوريد الأجوف" },
+                            { en: "Ventricle", ar: "البطين" }
+                        ]
+                    },
+                    leftAtrium: {
+                        category: "Cardiovascular / Chambers",
+                        title: "Left Atrium",
+                        latin: "Atrium sinistrum",
+                        color: 0xf87171,
+                        descEn: "The left atrium receives oxygenated blood from the lungs via the pulmonary veins and passes it down into the left ventricle for systemic circulation.",
+                        descAr: "الأذين الأيسر يستقبل الدم المحمل بالأكسجين من الرئتين عبر الأوردة الرئوية ويوجهه إلى البطين الأيسر للدورة الدموية الجهازية.",
+                        vocab: [
+                            { en: "Oxygenated Blood", ar: "دم محمل بالأكسجين" },
+                            { en: "Pulmonary Veins", ar: "الأوردة الرئوية" },
+                            { en: "Systemic Circulation", ar: "الدورة الدموية الجهازية" }
+                        ]
+                    },
+                    aorta: {
+                        category: "Cardiovascular / Arteries",
+                        title: "Aorta",
+                        latin: "Aorta",
+                        color: 0xdc2626,
+                        descEn: "The aorta is the main systemic artery of the body, originating from the left ventricle and distributing oxygen-rich blood to all parts of the systemic circulation.",
+                        descAr: "الشريان الأورطي (الأبهر) هو الشريان الرئيسي للجسم، ينشأ من البطين الأيسر ويوزع الدم الغني بالأكسجين إلى جميع أجزاء الجسم.",
+                        vocab: [
+                            { en: "Systemic Artery", ar: "شريان جهازي" },
+                            { en: "Oxygen-rich Blood", ar: "دم غني بالأكسجين" },
+                            { en: "Distribution", ar: "توزيع" }
+                        ]
+                    },
+                    myocardium: {
+                        category: "Cardiovascular / Muscle Tissue",
+                        title: "Myocardium",
+                        latin: "Myocardium",
+                        color: 0x991b1b,
+                        descEn: "The myocardium is the thick, middle muscular layer of the heart wall containing cardiac muscle fibers that contract rhythmically to pump blood.",
+                        descAr: "عضلة القلب (الميوقارديم) هي الطبقة العضلية الوسطى والسميكة لجدار القلب وتحتوي على ألياف عضلية تنقبض بشكل إيقاعي لضخ الدم.",
+                        vocab: [
+                            { en: "Muscle Layer", ar: "طبقة عضلية" },
+                            { en: "Cardiac Muscle", ar: "عضلة قلبية" },
+                            { en: "Contract Rhythmically", ar: "تنقبض إيقاعياً" }
+                        ]
+                    }
+                }
+            },
+            skeleton: {
+                name: "Skeletal System",
+                parts: {
+                    skull: {
+                        category: "Axial Skeleton / Cranium",
+                        title: "Skull (Cranium)",
+                        latin: "Cranium",
+                        color: 0xf8fafc,
+                        descEn: "The cranium is the bony structure that encases and protects the brain, sensory organs, and supports the structures of the face.",
+                        descAr: "جمجمة الرأس (الكرانيوم) هي البنية العظمية التي تحيط بالدماغ وتحميه، بالإضافة إلى حماية الأعضاء الحسية ودعم بنية الوجه.",
+                        vocab: [
+                            { en: "Bony Structure", ar: "بنية عظمية" },
+                            { en: "Encases and Protects", ar: "يحيط ويحمي" },
+                            { en: "Sensory Organs", ar: "أعضاء حسية" }
+                        ]
+                    },
+                    spine: {
+                        category: "Axial Skeleton / Vertebral Column",
+                        title: "Vertebral Column (Spine)",
+                        latin: "Columna vertebralis",
+                        color: 0xe2e8f0,
+                        descEn: "The spine consists of interconnected vertebrae that protect the spinal cord, support upright posture, and allow flexible torso mobility.",
+                        descAr: "العمود الفقري يتكون من فقرات مترابطة تحمي الحبل الشوكي، تدعم الوضعية المنتصبة، وتسمح بحركة الجذع بمرونة.",
+                        vocab: [
+                            { en: "Interconnected Vertebrae", ar: "فقرات مترابطة" },
+                            { en: "Spinal Cord", ar: "الحبل الشوكي" },
+                            { en: "Upright Posture", ar: "وضعية منتصبة" }
+                        ]
+                    },
+                    ribcage: {
+                        category: "Axial Skeleton / Thorax",
+                        title: "Rib Cage",
+                        latin: "Cavea thoracica",
+                        color: 0xccbdc0,
+                        descEn: "The rib cage protects vital thoracic organs including the heart and lungs, while expanding and contracting during respiratory mechanics.",
+                        descAr: "قفص الصدر يحمي الأعضاء الحيوية الصدرية بما فيها القلب والرئتين، بينما يتمدد وينكمش أثناء ميكانيكية التنفس.",
+                        vocab: [
+                            { en: "Thoracic Organs", ar: "أعضاء صدرية" },
+                            { en: "Respiratory Mechanics", ar: "ميكانيكية التنفس" },
+                            { en: "Expanding and Contracting", ar: "تمدد وانكماش" }
+                        ]
+                    },
+                    femur: {
+                        category: "Appendicular Skeleton / Lower Limb",
+                        title: "Femur (Thigh Bone)",
+                        latin: "Femur",
+                        color: 0xf1f5f9,
+                        descEn: "The femur is the longest, heaviest, and strongest bone in the human body, transmitting forces from the hip to the lower leg during locomotion.",
+                        descAr: "عظمة الفخذ هي أطول وأثقل وأقوى عظمة في جسم الإنسان، وتنقل القوى من الورك إلى الساق السفلى أثناء الحركة.",
+                        vocab: [
+                            { en: "Longest Bone", ar: "أطول عظمة" },
+                            { en: "Transmitting Forces", ar: "نقل القوى" },
+                            { en: "Locomotion", ar: "الحركة والانتقال" }
+                        ]
+                    }
+                }
+            },
+            muscular: {
+                name: "Muscular System",
+                parts: {
+                    pectorals: {
+                        category: "Upper Torso / Chest Muscles",
+                        title: "Pectoralis Major",
+                        latin: "Musculus pectoralis major",
+                        color: 0xf97316,
+                        descEn: "A thick, fan-shaped muscle situated at the chest of the human body, making up the bulk of the chest muscles and facilitating arm flexion and rotation.",
+                        descAr: "عضلة صدرية كبيرة وهي عضلة سميكة على شكل مروحة تقع في صدر الإنسان، تشكل الجزء الأكبر من عضلات الصدر وتسهل ثني الذراع ودورانها.",
+                        vocab: [
+                            { en: "Fan-shaped Muscle", ar: "عضلة على شكل مروحة" },
+                            { en: "Bulk of Chest", ar: "كتلة الصدر" },
+                            { en: "Arm Flexion", ar: "ثني الذراع" }
+                        ]
+                    },
+                    biceps: {
+                        category: "Upper Limbs / Arms",
+                        title: "Biceps Brachii",
+                        latin: "Biceps brachii",
+                        color: 0xea580c,
+                        descEn: "A two-headed muscle located on the upper arm between the shoulder and the elbow, primarily responsible for forearm supination and elbow flexion.",
+                        descAr: "عضلة ذات رأسين (البايسبس) تقع في الجزء العلوي من الذراع بين الكتف والمرفق، ومؤهلة أساساً لثني المرفق وتدوير الساعد.",
+                        vocab: [
+                            { en: "Two-headed Muscle", ar: "عضلة ذات رأسين" },
+                            { en: "Forearm Supination", ar: "بسط/تدوير الساعد" },
+                            { en: "Elbow Flexion", ar: "ثني المرفق" }
+                        ]
+                    },
+                    abdominals: {
+                        category: "Core / Abdominal Wall",
+                        title: "Rectus Abdominis",
+                        latin: "Musculus rectus abdominis",
+                        color: 0xc2410c,
+                        descEn: "A paired muscle running vertically on each side of the anterior wall of the human abdomen, commonly known as the 'abs', aiding in core stabilization and lumbar flexion.",
+                        descAr: "عضلة البطن المستقيمة (الكور) وهي زوج من العضلات يمتد عمودياً على جدار البطن الأمامي، وتساعد في تثبيت الجذع وثني أسفل الظهر.",
+                        vocab: [
+                            { en: "Anterior Wall", ar: "الجدار الأمامي" },
+                            { en: "Core Stabilization", ar: "تثبيت الجذع" },
+                            { en: "Lumbar Flexion", ar: "ثني أسفل الظهر" }
+                        ]
+                    },
+                    quadriceps: {
+                        category: "Lower Limbs / Thigh",
+                        title: "Quadriceps Femoris",
+                        latin: "Quadriceps femoris",
+                        color: 0x9a3412,
+                        descEn: "A large muscle group located at the front of the thigh, acting as a powerful knee extensor and essential for walking, running, and jumping.",
+                        descAr: "مجموعة عضلية كبيرة تقع في مقدمة الفخذ، تعمل كممدد قوي للركبة وأساسية للمشي، الجري، والقفز.",
+                        vocab: [
+                            { en: "Muscle Group", ar: "مجموعة عضلية" },
+                            { en: "Knee Extensor", ar: "ممدد الركبة" },
+                            { en: "Jumping", ar: "القفز" }
+                        ]
+                    }
+                }
+            }
+        };
+
+        let currentSystemKey = 'brain';
+        let currentPartKey = 'frontal';
+
+        // Three.js Engine Setup
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        // Lighting setup
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+        scene.add(ambientLight);
+
+        const pointLight = new THREE.PointLight(0xffffff, 1.8);
+        pointLight.position.set(15, 15, 15);
+        scene.add(pointLight);
+
+        const pointLight2 = new THREE.PointLight(0x38bdf8, 1.2);
+        pointLight2.position.set(-15, -15, -15);
+        scene.add(pointLight2);
+
+        // Group to hold dynamic 3D geometry
+        const modelGroup = new THREE.Group();
+        scene.add(modelGroup);
+
+        let mainMesh;
+        let secondaryMeshNode1, secondaryMeshNode2;
+
+        function build3DModel(systemKey, partKey) {
+            // Clear previous children
+            while(modelGroup.children.length > 0){ 
+                modelGroup.remove(modelGroup.children[0]); 
+            }
+
+            const partData = anatomicalDatabase[systemKey].parts[partKey];
+            const colorVal = partData ? partData.color : 0x38bdf8;
+
+            // Generate customized organic geometry based on system
+            if (systemKey === 'brain') {
+                const geo = new THREE.SphereGeometry(1.7, 32, 32);
+                const mat = new THREE.MeshStandardMaterial({ color: colorVal, roughness: 0.3, metalness: 0.2 });
+                mainMesh = new THREE.Mesh(geo, mat);
+                modelGroup.add(mainMesh);
+
+                // Additional lobes/nodules for realistic 3D complexity
+                const subGeo = new THREE.SphereGeometry(0.5, 16, 16);
+                const subMat = new THREE.MeshStandardMaterial({ color: 0xf472b6, roughness: 0.4 });
+                secondaryMeshNode1 = new THREE.Mesh(subGeo, subMat);
+                secondaryMeshNode1.position.set(0.9, 0.6, 0.7);
+                modelGroup.add(secondaryMeshNode1);
+
+                secondaryMeshNode2 = new THREE.Mesh(subGeo, subMat);
+                secondaryMeshNode2.position.set(-0.9, -0.3, 0.4);
+                modelGroup.add(secondaryMeshNode2);
+            } 
+            else if (systemKey === 'heart') {
+                // Heart-like organic shape using cylinders and spheres combined
+                const heartGeo = new THREE.ConeGeometry(1.2, 2.5, 32);
+                const mat = new THREE.MeshStandardMaterial({ color: colorVal, roughness: 0.2, metalness: 0.4 });
+                mainMesh = new THREE.Mesh(heartGeo, mat);
+                mainMesh.rotation.z = Math.PI / 6;
+                modelGroup.add(mainMesh);
+
+                const topGeo = new THREE.SphereGeometry(0.8, 16, 16);
+                secondaryMeshNode1 = new THREE.Mesh(topGeo, mat);
+                secondaryMeshNode1.position.set(-0.4, 0.9, 0);
+                modelGroup.add(secondaryMeshNode1);
+
+                secondaryMeshNode2 = new THREE.Mesh(topGeo, mat);
+                secondaryMeshNode2.position.set(0.5, 0.8, 0);
+                modelGroup.add(secondaryMeshNode2);
+            }
+            else if (systemKey === 'skeleton') {
+                // Skeletal structure representation (Cylinder stack + sphere)
+                const boneGeo = new THREE.CylinderGeometry(0.4, 0.5, 2.8, 16);
+                const mat = new THREE.MeshStandardMaterial({ color: colorVal, roughness: 0.6, metalness: 0.1 });
+                mainMesh = new THREE.Mesh(boneGeo, mat);
+                modelGroup.add(mainMesh);
+
+                const jointGeo = new THREE.SphereGeometry(0.7, 16, 16);
+                secondaryMeshNode1 = new THREE.Mesh(jointGeo, mat);
+                secondaryMeshNode1.position.set(0, 1.5, 0);
+                modelGroup.add(secondaryMeshNode1);
+
+                secondaryMeshNode2 = new THREE.Mesh(jointGeo, mat);
+                secondaryMeshNode2.position.set(0, -1.5, 0);
+                modelGroup.add(secondaryMeshNode2);
+            }
+            else if (systemKey === 'muscular') {
+                // Muscular fibre representation (Torus/Capsule elements)
+                const muscleGeo = new THREE.CapsuleGeometry(0.9, 2.2, 16, 32);
+                const mat = new THREE.MeshStandardMaterial({ color: colorVal, roughness: 0.4, metalness: 0.1 });
+                mainMesh = new THREE.Mesh(muscleGeo, mat);
+                modelGroup.add(mainMesh);
+
+                const fiberGeo = new THREE.CylinderGeometry(0.2, 0.2, 2.6, 16);
+                const fiberMat = new THREE.MeshStandardMaterial({ color: 0xffedd5, roughness: 0.5 });
+                secondaryMeshNode1 = new THREE.Mesh(fiberGeo, fiberMat);
+                secondaryMeshNode1.position.set(0.7, 0, 0);
+                modelGroup.add(secondaryMeshNode1);
+
+                secondaryMeshNode2 = new THREE.Mesh(fiberGeo, fiberMat);
+                secondaryMeshNode2.position.set(-0.7, 0, 0);
+                modelGroup.add(secondaryMeshNode2);
+            }
+        }
+
+        camera.position.z = 4.5;
+
+        // Mouse and Touch Interaction Controls for 3D Rotation
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+        let autoRotate = true;
+
+        container.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            previousMousePosition = { x: e.clientX, y: e.clientY };
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const deltaX = e.clientX - previousMousePosition.x;
+            const deltaY = e.clientY - previousMousePosition.y;
+
+            modelGroup.rotation.y += deltaX * 0.006;
+            modelGroup.rotation.x += deltaY * 0.006;
+
+            previousMousePosition = { x: e.clientX, y: e.clientY };
+        });
+
+        window.addEventListener('mouseup', () => { isDragging = false; });
+
+        // Touch event support for tablets & iPads
+        container.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            const deltaX = e.touches[0].clientX - previousMousePosition.x;
+            const deltaY = e.touches[0].clientY - previousMousePosition.y;
+
+            modelGroup.rotation.y += deltaX * 0.006;
+            modelGroup.rotation.x += deltaY * 0.006;
+
+            previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        });
+
+        window.addEventListener('touchend', () => { isDragging = false; });
+
+        // Switch Systems (Brain, Heart, Skeleton, Muscular)
+        function switchSystem(systemKey) {
+            currentSystemKey = systemKey;
+            
+            // Update UI active buttons for systems
+            document.querySelectorAll('.system-btn').forEach(btn => {
+                btn.classList.remove('bg-cyan-600', 'text-white', 'shadow-md');
+                btn.classList.add('bg-slate-800', 'text-slate-300', 'border', 'border-slate-700/50');
+            });
+            const activeSysBtn = document.getElementById(`sys-btn-${systemKey}`);
+            if(activeSysBtn) {
+                activeSysBtn.classList.remove('bg-slate-800', 'text-slate-300', 'border', 'border-slate-700/50');
+                activeSysBtn.classList.add('bg-cyan-600', 'text-white', 'shadow-md');
+            }
+
+            // Populate sub-parts list dynamically
+            const subPartsContainer = document.getElementById('subPartsList');
+            subPartsContainer.innerHTML = '';
+            
+            const systemData = anatomicalDatabase[systemKey];
+            const partKeys = Object.keys(systemData.parts);
+            
+            // Select first part by default in new system
+            currentPartKey = partKeys[0];
+
+            partKeys.forEach((pkey, index) => {
+                const partObj = systemData.parts[pkey];
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-medium transition flex items-center justify-between ${index === 0 ? 'bg-cyan-950/80 text-cyan-300 border border-cyan-800/80' : 'bg-slate-800/60 hover:bg-slate-800 text-slate-300 border border-slate-700/40'}`;
+                btn.setAttribute('onclick', `switchPart('${systemKey}', '${pkey}')`);
+                btn.id = `sub-btn-${pkey}`;
+                btn.innerHTML = `<span>${partObj.title}</span> <span class="text-[10px] text-slate-400 opacity-70">3D</span>`;
+                subPartsContainer.appendChild(btn);
+            });
+
+            // Update 3D model and text info panel
+            build3DModel(currentSystemKey, currentPartKey);
+            updateInfoPanel(currentSystemKey, currentPartKey);
+        }
+
+        // Switch specific part inside active system
+        function switchPart(systemKey, partKey) {
+            currentSystemKey = systemKey;
+            currentPartKey = partKey;
+
+            // Update sub-button active states
+            const systemData = anatomicalDatabase[systemKey];
+            Object.keys(systemData.parts).forEach(pkey => {
+                const sBtn = document.getElementById(`sub-btn-${pkey}`);
+                if(sBtn) {
+                    if(pkey === partKey) {
+                        sBtn.className = "w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-medium transition flex items-center justify-between bg-cyan-950/80 text-cyan-300 border border-cyan-800/80";
+                    } else {
+                        sBtn.className = "w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-medium transition flex items-center justify-between bg-slate-800/60 hover:bg-slate-800 text-slate-300 border border-slate-700/40";
+                    }
+                }
+            });
+
+            build3DModel(systemKey, partKey);
+            updateInfoPanel(systemKey, partKey);
+        }
+
+        // Update Text Info Panel and Vocabulary
+        function updateInfoPanel(systemKey, partKey) {
+            const data = anatomicalDatabase[systemKey].parts[partKey];
+            if(!data) return;
+
+            document.getElementById('partCategory').innerText = data.category;
+            document.getElementById('partTitle').innerText = data.title;
+            document.getElementById('partLatin').innerText = data.latin;
+            document.getElementById('descEn').innerText = data.descEn;
+            document.getElementById('descAr').innerText = data.descAr;
+
+            // Update Vocabulary list
+            const vocabListEl = document.getElementById('vocabList');
+            vocabListEl.innerHTML = '';
+            data.vocab.forEach(item => {
+                const li = document.createElement('li');
+                li.className = "flex justify-between items-center bg-slate-900 p-2 rounded-lg border border-slate-800";
+                li.innerHTML = `<span class="font-semibold text-cyan-300">${item.en}</span> <span class="text-slate-400 text-xs">${item.ar}</span>`;
+                vocabListEl.appendChild(li);
+            });
+        }
+
+        // Toggle Arabic translation box visibility
+        let translationVisible = true;
+        document.getElementById('langToggle').addEventListener('click', () => {
+            translationVisible = !translationVisible;
+            const arBox = document.getElementById('arTranslationBox');
+            arBox.style.display = translationVisible ? 'block' : 'none';
+        });
+
+        // Reset Camera view button
+        document.getElementById('resetCameraBtn').addEventListener('click', () => {
+            modelGroup.rotation.set(0, 0, 0);
+            camera.position.set(0, 0, 4.5);
+        });
+
+        // Toggle Auto-rotation
+        function toggleAutoRotate() {
+            autoRotate = !autoRotate;
+            const btn = document.getElementById('autoRotateBtn');
+            const status = document.getElementById('rotStatus');
+            if(autoRotate) {
+                btn.innerText = "Pause Rotation";
+                btn.className = "bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-1.5 rounded-lg border border-slate-700 transition font-medium";
+                status.innerText = "Active";
+            } else {
+                btn.innerText = "Resume Rotation";
+                btn.className = "bg-cyan-600 hover:bg-cyan-500 text-white text-xs px-3 py-1.5 rounded-lg transition font-medium";
+                status.innerText = "Paused";
+            }
+        }
+
+        // Text-To-Speech Pronunciation Feature
+        document.getElementById('audioBtn').addEventListener('click', () => {
+            const currentTitle = document.getElementById('partTitle').innerText;
+            const utterance = new SpeechSynthesisUtterance(currentTitle);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9; // Slightly slower for language learners
+            window.speechSynthesis.speak(utterance);
+        });
+
+        // Initial setup execution
+        switchSystem('brain');
+
+        // Animation Loop for Three.js Rendering
+        function animate() {
+            requestAnimationFrame(animate);
+            if (autoRotate && !isDragging) {
+                modelGroup.rotation.y += 0.003;
+            }
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Handle Responsive Window Resizing
+        window.addEventListener('resize', () => {
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        });
+    </script>
 </body>
 </html>
